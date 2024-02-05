@@ -7,13 +7,15 @@
 class Node {
 public:
     Node(double value) : value(value) {}
-    Node() : value(0) {
+    Node() {
 
     }
     
     Node operator+(const Node& other) const { return {value + other.value}; }
+    Node operator+(const int other) const { return {value + other}; }
 
     Node operator*(const Node& other) const { return {value * other.value}; }
+    Node operator*(const int other) const { return {value * other}; }
 
     void operator+=(const Node& other) {
         value += other.value;

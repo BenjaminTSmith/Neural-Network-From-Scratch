@@ -12,9 +12,12 @@ public:
     Node bias;
     Node sum;
 
+    Neuron() {}
+
     Neuron(size_t size) {
         weights.resize(size);
     }
+
 
     void forwardPass(const std::vector<Node>& inputs) {
         sum.value = 0;
@@ -26,15 +29,34 @@ public:
         out = sum.tanh();
     }
 
+    void forwardPass(const std::vector<int>& inputs) {
+        sum.value = 0;
+        for (int i = 0; i < inputs.size(); i++) {
+            sum += weights[i] * inputs[i];
+        }
+        sum += bias;
+
+        out = sum.tanh();
+    }
+
     void backProp(std::vector<Node>& inputs) {
         double temp = (std::exp(2 * sum.value) - 1) / (std::exp(2 * sum.value) + 1);
         sum.grad = (1 - temp * temp) * out.grad;
         bias.grad = sum.grad;
-        std::cout << bias.grad << std::endl;
 
         for (int i = 0; i < inputs.size(); i++) {
             inputs[i].grad += sum.grad * weights[i].value;
             weights[i].grad = sum.grad * inputs[i].value;
+        }
+    }
+
+    void backProp(std::vector<int>& inputs) {
+        double temp = (std::exp(2 * sum.value) - 1) / (std::exp(2 * sum.value) + 1);
+        sum.grad = (1 - temp * temp) * out.grad;
+        bias.grad = sum.grad;
+
+        for (int i = 0; i < inputs.size(); i++) {
+            weights[i].grad = sum.grad * inputs[i];
         }
     }
 
