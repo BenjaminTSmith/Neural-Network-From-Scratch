@@ -7,7 +7,7 @@
 class Node {
 public:
     Node(double value) : value(value) {}
-    Node() {
+    Node() : value(0) {
 
     }
     

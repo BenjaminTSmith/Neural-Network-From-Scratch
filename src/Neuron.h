@@ -12,14 +12,17 @@ public:
     Node bias;
     Node sum;
 
-    Neuron() {}
+    Neuron() : sum(0), bias(0), out(0) {}
 
-    Neuron(size_t size) {
+    Neuron(size_t size) : sum(0), bias(0), out(0) {
         weights.resize(size);
     }
 
 
     void forwardPass(const std::vector<Node>& inputs) {
+        std::cout << "we made it" << std::endl;
+        std::cout << "inputs.size in Neuron: " << inputs.size() << std::endl;
+        std::cout << sum.grad << std::endl;
         sum.value = 0;
         for (int i = 0; i < inputs.size(); i++) {
             sum += inputs[i] * weights[i];

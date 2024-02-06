@@ -3,45 +3,56 @@
 
 #include "Neuron.h"
 #include <algorithm>
+#include <iterator>
 
 template<typename T>
 class Layer {
 public:
     std::vector<T> neurons;
+    int test_num = 5;
 
     Layer(int size, int nins) {
         neurons.resize(size);
-        std::fill(neurons.begin(), neurons.end(), Neuron(nins));
+        std::fill(neurons.begin(), neurons.end(), T(nins));
     }
 
     Layer(int size) {
         neurons.resize(size);
-        std::fill(neurons.begin(), neurons.end(), int(0));
+        std::fill(neurons.begin(), neurons.end(), T(0));
     }
+
 
     void forwardPass(const std::vector<Node>& inputs) {
         for (auto& neuron: neurons) { neuron.forwardPass(inputs); }
     }
 
-    void forwardPass(const std::vector<int>& inputs) {
+    void forwardPass(const std::vector<double>& inputs) {
         for (auto& neuron: neurons) { neuron.forwardPass(inputs); }
     }
 
-    void forwardPass(const Layer& inputs) {
+    void forwardPass(const Layer<Neuron>& inputs) {
         std::vector<Node> prevLayer;
         for (auto& input: inputs.neurons) {
             prevLayer.push_back(input.out);
         }
+        std::cout << "prevLayer.size: " << prevLayer.size() << std::endl;
         for (auto& neuron: neurons) {
+            std::cout << "in here" << std::endl;
             neuron.forwardPass(prevLayer);
+            std::cout << "after here" << std::endl;
         }
+        std::cout << "7" << std::endl;
+    }
+
+    void forwardPass(const Layer<double>& inputs) {
+
     }
 
     void backProp(std::vector<Node>& inputs) {
         for (auto& neuron: neurons) { neuron.backProp(inputs); }
     }
 
-    void backProp(std::vector<int>& inputs) {
+    void backProp(std::vector<double>& inputs) {
         for (auto& neuron: neurons) { neuron.backProp(inputs); }
     }
 
