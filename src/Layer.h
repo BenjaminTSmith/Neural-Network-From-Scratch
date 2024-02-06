@@ -35,13 +35,9 @@ public:
         for (auto& input: inputs.neurons) {
             prevLayer.push_back(input.out);
         }
-        std::cout << "prevLayer.size: " << prevLayer.size() << std::endl;
         for (auto& neuron: neurons) {
-            std::cout << "in here" << std::endl;
             neuron.forwardPass(prevLayer);
-            std::cout << "after here" << std::endl;
         }
-        std::cout << "7" << std::endl;
     }
 
     void forwardPass(const Layer<double>& inputs) {

@@ -31,7 +31,7 @@ public:
 
     void forwardPass() {
         layers[0].forwardPass(inputLayer);
-        for (int i = 1; i < layerCount - 1; i++) {
+        for (int i = 1; i < layerCount - 2; i++) {
             layers[i].forwardPass(layers[i - 1]);
         }
         outputLayer.forwardPass(layers[layers.size() - 1]);

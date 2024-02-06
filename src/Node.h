@@ -7,9 +7,7 @@
 class Node {
 public:
     Node(double value) : value(value) {}
-    Node() : value(0) {
-
-    }
+    Node() : value(0) {}
     
     Node operator+(const Node& other) const { return {value + other.value}; }
     Node operator+(const int other) const { return {value + other}; }
