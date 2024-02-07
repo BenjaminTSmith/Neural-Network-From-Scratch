@@ -24,11 +24,6 @@ public:
         }
     }
 
-    void printStuff() {
-        std::cout << layers.size() << std::endl;
-        std::cout << layers[0].test_num << std::endl;
-    }
-
     void forwardPass() {
         layers[0].forwardPass(inputLayer);
         for (int i = 1; i < layerCount - 2; i++) {

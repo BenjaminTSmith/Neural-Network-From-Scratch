@@ -29,7 +29,7 @@ public:
         out = sum.tanh();
     }
 
-    void forwardPass(const std::vector<int>& inputs) {
+    void forwardPass(const std::vector<double>& inputs) {
         sum.value = 0;
         for (int i = 0; i < inputs.size(); i++) {
             sum += weights[i] * inputs[i];

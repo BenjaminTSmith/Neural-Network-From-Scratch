@@ -9,7 +9,6 @@ template<typename T>
 class Layer {
 public:
     std::vector<T> neurons;
-    int test_num = 5;
 
     Layer(int size, int nins) {
         neurons.resize(size);
@@ -41,7 +40,9 @@ public:
     }
 
     void forwardPass(const Layer<double>& inputs) {
-
+        for (auto& neuron: neurons) {
+            neuron.forwardPass(inputs.neurons);
+        }
     }
 
     void backProp(std::vector<Node>& inputs) {
