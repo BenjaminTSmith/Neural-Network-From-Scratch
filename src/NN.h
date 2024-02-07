@@ -32,6 +32,24 @@ public:
         outputLayer.forwardPass(layers[layers.size() - 1]);
     }
 
+    void backProp() {
+        zeroGrad();
+        for (auto& neuron: outputLayer.neurons) {
+            neuron.out.grad = 1;
+        }
+        outputLayer.backProp(layers[layers.size() - 1]);
+        for (size_t i = layers.size() - 1; i > 0; i++) {
+            layers[i].backProp(layers[i - 1]);
+        }
+        layers[0].backProp(inputLayer);
+    }
+
+    void zeroGrad() {
+        for (auto& layer: layers) {
+            layer.zeroGrad();
+        }
+        outputLayer.zeroGrad();
+    }
 
     int getLayerCount() { return layerCount; }
 

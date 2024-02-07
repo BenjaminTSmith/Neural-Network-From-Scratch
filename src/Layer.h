@@ -30,12 +30,8 @@ public:
     }
 
     void forwardPass(const Layer<Neuron>& inputs) {
-        std::vector<Node> prevLayer;
-        for (auto& input: inputs.neurons) {
-            prevLayer.push_back(input.out);
-        }
         for (auto& neuron: neurons) {
-            neuron.forwardPass(prevLayer);
+            neuron.forwardPass(inputs.neurons);
         }
     }
 
@@ -51,6 +47,18 @@ public:
 
     void backProp(std::vector<double>& inputs) {
         for (auto& neuron: neurons) { neuron.backProp(inputs); }
+    }
+
+    void backProp(Layer<Neuron>& inputs) {
+        for (auto& neuron: neurons) {
+            neuron.backProp(inputs.neurons);
+        }
+    }
+
+    void backProp(Layer<double>& inputs) {
+        for (auto& neuron: neurons) {
+            neuron.backProp(inputs.neurons);
+        }
     }
 
     void zeroGrad() {
