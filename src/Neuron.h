@@ -11,7 +11,7 @@ public:
     Node out_;
     Node bias_;
     Node sum_;
-    double learning_rate_ = 0.1;
+    double kLearningRate = 0.1;
 
     Neuron() {}
 
@@ -62,9 +62,9 @@ public:
 
     void ForwardProp() {
         for (auto& weight: weights_) {
-            weight.value_ -= weight.grad_ * learning_rate_;
+            weight.value_ -= weight.grad_ * kLearningRate;
         }
-        bias_.value_ -= bias_.grad_ * learning_rate_;
+        bias_.value_ -= bias_.grad_ * kLearningRate;
     }
 
     void ZeroGrad() {

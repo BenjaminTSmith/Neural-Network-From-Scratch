@@ -2,6 +2,7 @@
 #define NN_H
 
 #include "Layer.h"
+#include <cmath>
 
 template<typename T>
 class NeuralNetwork {
@@ -58,7 +59,17 @@ public:
         output_layer_.ForwardProp();
     }
 
-    int GetLayerCount() { return layer_count_; }
+    double MSELoss(const std::vector<double>& ground_truth) {
+        double MSE = 0;
+        std::cout << output_layer_.neurons_[0].out_.value_ << std::endl;
+        for (int i = 0; i < ground_truth.size(); i++) {
+            MSE += std::pow(output_layer_.neurons_[i].out_.value_ 
+                            - ground_truth[i], 2);
+        }
+        return MSE;
+    }
+
+    int layer_count() { return layer_count_; }
 
 };
 
