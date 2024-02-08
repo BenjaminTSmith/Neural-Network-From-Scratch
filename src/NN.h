@@ -33,10 +33,17 @@ public:
         output_layer_.ForwardPass(layers_[layers_.size() - 1]);
     }
 
-    void BackProp() {
+    void BackProp(const std::vector<double>& ground_truth) {
         ZeroGrad();
-        for (auto& neuron: output_layer_.neurons_) {
-            neuron.out_.grad_ = 1;
+        double MSE = MSELoss(ground_truth);
+        /*
+        *   TODO:
+        *
+        *   Implement BackPropagation from mean squared error loss.
+        *
+        */
+        for (int i = 0; i < output_layer_.neurons_.size(); i++) {
+            output_layer_.neurons_[i].out_.grad_ = 1;
         }
         output_layer_.BackProp(layers_[layers_.size() - 1]);
         for (size_t i = layers_.size() - 1; i > 0; i++) {
@@ -66,7 +73,7 @@ public:
             MSE += std::pow(output_layer_.neurons_[i].out_.value_ 
                             - ground_truth[i], 2);
         }
-        return MSE;
+        return (1 / static_cast<double>(ground_truth.size())) * MSE;
     }
 
     int layer_count() { return layer_count_; }

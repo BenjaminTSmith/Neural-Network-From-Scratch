@@ -8,13 +8,10 @@ int main() {
 
     neural_network->ForwardPass();
     std::cout << neural_network->output_layer_.neurons_[0].out_.value_ << std::endl;
-    neural_network->BackProp();
-    std::cout << neural_network->layers_[0].neurons_[2].weights_[1].value_ << std::endl;
-    neural_network->ForwardProp();
-    std::cout << neural_network->layers_[0].neurons_[2].weights_[1].value_ << std::endl;
-
+    neural_network->BackProp(ground_truth);
     std::cout << neural_network->output_layer_.neurons_[0].out_.value_ << std::endl;
     std::cout << neural_network->MSELoss(ground_truth) << std::endl;
+    neural_network->ForwardProp();
 
     delete neural_network;
 
