@@ -3,18 +3,14 @@
 int main() {
     
     NeuralNetwork<double> nn(2, {3}, 5);
-    nn.inputLayer.neurons = {0.6, 0.5};
+    nn.input_layer_.neurons_ = {0.6, 0.5};
 
-    nn.forwardPass();
-    std::cout << nn.outputLayer.neurons[0].out.value << std::endl;
-    nn.backProp();
-    std::cout << nn.outputLayer.neurons[0].sum.grad << std::endl;
-    std::cout << nn.outputLayer.neurons[0].bias.grad << std::endl;
-    std::cout << nn.layers[0].neurons[0].out.grad << std::endl;
-    std::cout << nn.layers[0].neurons[0].bias.grad << std::endl;
-    std::cout << nn.layers[0].neurons[0].sum.grad << std::endl;
-    std::cout << nn.layers[0].neurons[0].weights[0].grad << std::endl;
-    std::cout << nn.layers[0].neurons[0].weights[1].grad << std::endl;
+    nn.ForwardPass();
+    std::cout << nn.output_layer_.neurons_[0].out_.value_ << std::endl;
+    nn.BackProp();
+    std::cout << nn.layers_[0].neurons_[2].weights_[1].value_ << std::endl;
+    nn.ForwardProp();
+    std::cout << nn.layers_[0].neurons_[2].weights_[1].value_ << std::endl;
 
     return 0;
 }

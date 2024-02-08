@@ -7,69 +7,70 @@
 
 class Neuron {
 public:
-    std::vector<Node> weights;
-    Node out;
-    Node bias;
-    Node sum;
+    std::vector<Node> weights_;
+    Node out_;
+    Node bias_;
+    Node sum_;
+    double learning_rate_ = 0.1;
 
     Neuron() {}
 
     Neuron(int size) {
-        weights.resize(size);
+        weights_.resize(size);
     }
 
-    void forwardPass(const std::vector<Neuron>& inputs) {
-        sum.value = 0;
+    void ForwardPass(const std::vector<Neuron>& inputs) {
+        sum_.value_ = 0;
         for (int i = 0; i < inputs.size(); i++) {
-            sum += inputs[i].out.value * weights[i].value;
+            sum_ += inputs[i].out_.value_ * weights_[i].value_;
         }
-        sum += bias;
+        sum_ += bias_;
 
-        out = sum.tanh();
+        out_ = sum_.tanh();
     }
 
-    void forwardPass(const std::vector<double>& inputs) {
-        sum.value = 0;
+    void ForwardPass(const std::vector<double>& inputs) {
+        sum_.value_ = 0;
         for (int i = 0; i < inputs.size(); i++) {
-            sum += weights[i] * inputs[i];
+            sum_ += weights_[i] * inputs[i];
         }
-        sum += bias;
+        sum_ += bias_;
 
-        out = sum.tanh();
+        out_ = sum_.tanh();
     }
 
-    void backProp(std::vector<Neuron>& inputs) {
-        double temp = (std::exp(2 * sum.value) - 1) / (std::exp(2 * sum.value) + 1);
-        sum.grad = (1 - temp * temp) * out.grad;
-        bias.grad = sum.grad;
-
-        for (int i = 0; i < inputs.size(); i++) {
-            inputs[i].out.grad += sum.grad * weights[i].value;
-            weights[i].grad = sum.grad * inputs[i].out.value;
-        }
-    }
-
-    void backProp(std::vector<double>& inputs) {
-        double temp = (std::exp(2 * sum.value) - 1) / (std::exp(2 * sum.value) + 1);
-        sum.grad = (1 - temp * temp) * out.grad;
-        bias.grad = sum.grad;
+    void BackProp(std::vector<Neuron>& inputs) {
+        double temp = (std::exp(2 * sum_.value_) - 1) / (std::exp(2 * sum_.value_) + 1);
+        sum_.grad_ = (1 - temp * temp) * out_.grad_;
+        bias_.grad_ = sum_.grad_;
 
         for (int i = 0; i < inputs.size(); i++) {
-            weights[i].grad = sum.grad * inputs[i];
+            inputs[i].out_.grad_ += sum_.grad_ * weights_[i].value_;
+            weights_[i].grad_ = sum_.grad_ * inputs[i].out_.value_;
         }
     }
 
-    void forwardProp() {
-        for (auto& weight: weights) {
-            weight.value -= weight.grad;
+    void BackProp(std::vector<double>& inputs) {
+        double temp = (std::exp(2 * sum_.value_) - 1) / (std::exp(2 * sum_.value_) + 1);
+        sum_.grad_ = (1 - temp * temp) * out_.grad_;
+        bias_.grad_ = sum_.grad_;
+
+        for (int i = 0; i < inputs.size(); i++) {
+            weights_[i].grad_ = sum_.grad_ * inputs[i];
         }
-        bias.value -= bias.grad;
     }
 
-    void zeroGrad() {
-        out.grad = 0;
-        for (auto& weight: weights) {
-            weight.grad = 0;
+    void ForwardProp() {
+        for (auto& weight: weights_) {
+            weight.value_ -= weight.grad_ * learning_rate_;
+        }
+        bias_.value_ -= bias_.grad_ * learning_rate_;
+    }
+
+    void ZeroGrad() {
+        out_.grad_ = 0;
+        for (auto& weight: weights_) {
+            weight.grad_ = 0;
         }
     }
 };

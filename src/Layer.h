@@ -8,65 +8,65 @@
 template<typename T>
 class Layer {
 public:
-    std::vector<T> neurons;
+    std::vector<T> neurons_;
 
     Layer(int size, int nins) {
-        neurons.resize(size);
-        std::fill(neurons.begin(), neurons.end(), T(nins));
+        neurons_.resize(size);
+        std::fill(neurons_.begin(), neurons_.end(), T(nins));
     }
 
     Layer(int size) {
-        neurons.resize(size);
-        std::fill(neurons.begin(), neurons.end(), T(0));
+        neurons_.resize(size);
+        std::fill(neurons_.begin(), neurons_.end(), T(0));
     }
 
 
-    void forwardPass(const std::vector<Node>& inputs) {
-        for (auto& neuron: neurons) { neuron.forwardPass(inputs); }
+    void ForwardPass(const std::vector<Node>& inputs) {
+        for (auto& neuron: neurons_) { neuron.ForwardPass(inputs); }
     }
 
-    void forwardPass(const std::vector<double>& inputs) {
-        for (auto& neuron: neurons) { neuron.forwardPass(inputs); }
+    void ForwardPass(const std::vector<double>& inputs) {
+        for (auto& neuron: neurons_) { neuron.ForwardPass(inputs); }
     }
 
-    void forwardPass(const Layer<Neuron>& inputs) {
-        for (auto& neuron: neurons) {
-            neuron.forwardPass(inputs.neurons);
+    void ForwardPass(const Layer<Neuron>& inputs) {
+        for (auto& neuron: neurons_) {
+            neuron.ForwardPass(inputs.neurons_);
         }
     }
 
-    void forwardPass(const Layer<double>& inputs) {
-        for (auto& neuron: neurons) {
-            neuron.forwardPass(inputs.neurons);
+    void ForwardPass(const Layer<double>& inputs) {
+        for (auto& neuron: neurons_) {
+            neuron.ForwardPass(inputs.neurons_);
         }
     }
 
-    void backProp(std::vector<Node>& inputs) {
-        for (auto& neuron: neurons) { neuron.backProp(inputs); }
+    void BackProp(std::vector<Node>& inputs) {
+        for (auto& neuron: neurons_) { neuron.BackProp(inputs); }
     }
 
-    void backProp(std::vector<double>& inputs) {
-        for (auto& neuron: neurons) { neuron.backProp(inputs); }
+    void BackProp(std::vector<double>& inputs) {
+        for (auto& neuron: neurons_) { neuron.BackProp(inputs); }
     }
 
-    void backProp(Layer<Neuron>& inputs) {
-        for (auto& neuron: neurons) {
-            neuron.backProp(inputs.neurons);
+    void BackProp(Layer<Neuron>& inputs) {
+        for (auto& neuron: neurons_) {
+            neuron.BackProp(inputs.neurons_);
         }
     }
 
-    void backProp(Layer<double>& inputs) {
-        for (auto& neuron: neurons) {
-            neuron.backProp(inputs.neurons);
+    void BackProp(Layer<double>& inputs) {
+        for (auto& neuron: neurons_) {
+            neuron.BackProp(inputs.neurons_);
         }
     }
 
-    void zeroGrad() {
-        for (auto& neuron: neurons) { neuron.zeroGrad(); }
+    void ZeroGrad() {
+        for (auto& neuron: neurons_) { neuron.ZeroGrad(); }
     }
 
-    void forwardProp() {
-        for (auto& neuron: neurons) { neuron.forwardProp(); }
+    void ForwardProp() {
+        for (auto& neuron: neurons_) { neuron.ForwardProp(); }
     }
 
 };
