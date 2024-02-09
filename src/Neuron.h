@@ -10,13 +10,13 @@ public:
     Node out_;
     Node bias_;
     Node sum_;
-    double kLearningRate = 0.1;
+    double kLearningRate = 0.01;
 
     Neuron() {}
 
     Neuron(int size) {
         weights_.resize(size);
-    }
+    }   
 
     void ForwardPass(const std::vector<Neuron>& inputs) {
         sum_.value_ = 0;

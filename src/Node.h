@@ -3,11 +3,12 @@
 
 #include <cmath>
 #include <vector>
+#include <iostream>
 
 class Node {
 public:
     Node(double value) : value_(value) {}
-    Node() : value_(1) {}
+    Node() : value_(0) {}
     
     Node operator+(const Node& other) const { return {value_ + other.value_}; }
     Node operator+(const double other) const { return {value_ + other}; }

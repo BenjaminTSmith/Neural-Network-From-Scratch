@@ -8,8 +8,8 @@ template<typename T>
 class NeuralNetwork {
 private:
     const int layer_count_;
-public:
     Layer<T> input_layer_;
+public:
     std::vector<Layer<Neuron>> layers_;
     Layer<Neuron> output_layer_;
 
@@ -39,7 +39,7 @@ public:
 
     void BackProp(const std::vector<double>& ground_truth) {
         ZeroGrad();
-        double MSE = MSELoss(ground_truth);
+        MSELoss(ground_truth);
         output_layer_.BackProp(layers_[layers_.size() - 1]);
         for (size_t i = layers_.size() - 1; i > 0; i--) {
             layers_[i].BackProp(layers_[i - 1]);
@@ -74,6 +74,11 @@ public:
 
     int layer_count() { return layer_count_; }
 
+    void PrintOutput() {
+        for (const auto& neuron: output_layer_.neurons_) {
+            std::cout << neuron.out_.value_ << std::endl;
+        }
+    }
 };
 
 
