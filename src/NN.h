@@ -13,6 +13,10 @@ public:
     std::vector<Layer<Neuron>> layers_;
     Layer<Neuron> output_layer_;
 
+    void set_input_layer(const std::vector<T>& inputs) {
+        input_layer_.neurons_ = inputs;
+    }
+
     NeuralNetwork(int input_layer, const std::vector<int>& hidden_layers,
                   int output_layer)
         : input_layer_(input_layer, 0),
@@ -36,7 +40,6 @@ public:
     void BackProp(const std::vector<double>& ground_truth) {
         ZeroGrad();
         double MSE = MSELoss(ground_truth);
-        std::cout << "MSE: " << MSE << std::endl;
         output_layer_.BackProp(layers_[layers_.size() - 1]);
         for (size_t i = layers_.size() - 1; i > 0; i--) {
             layers_[i].BackProp(layers_[i - 1]);
