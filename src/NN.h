@@ -19,7 +19,7 @@ public:
 
     NeuralNetwork(int input_layer, const std::vector<int>& hidden_layers,
                   int output_layer)
-        : input_layer_(input_layer, 0),
+        : input_layer_(input_layer),
           layer_count_(hidden_layers.size() + 2),
           output_layer_(output_layer, hidden_layers[hidden_layers.size() - 1])
     {
@@ -59,6 +59,12 @@ public:
             layer.ForwardProp();
         }
         output_layer_.ForwardProp();
+    }
+
+    void Pass(std::vector<double> ground_truth) {
+        BackProp(ground_truth);
+        ForwardProp();
+        ForwardPass();
     }
 
     double MSELoss(const std::vector<double>& ground_truth) {

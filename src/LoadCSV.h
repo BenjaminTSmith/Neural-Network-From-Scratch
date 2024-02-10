@@ -21,6 +21,7 @@ static std::vector<std::vector<double>> parseCSV(std::string filepath) {
             parsed_line.push_back(std::stod(line.substr(0, pos)));
             line.erase(0, pos + 1);
         }
+        parsed_line.push_back(std::stod(line));
         parsed_CSV.push_back(parsed_line);
     }
 
