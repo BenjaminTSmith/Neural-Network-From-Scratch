@@ -61,10 +61,10 @@ public:
         output_layer_.ForwardProp();
     }
 
-    void Pass(std::vector<double> ground_truth) {
+    void Prop(std::vector<double> ground_truth) {
         BackProp(ground_truth);
         ForwardProp();
-        ForwardPass();
+        // ForwardPass();
     }
 
     double MSELoss(const std::vector<double>& ground_truth) {
@@ -84,9 +84,21 @@ public:
         for (const auto& neuron: output_layer_.neurons_) {
             std::cout << neuron.out_.value_ << std::endl;
         }
+        std::cout << std::endl;
+    }
+
+    int SoftMax() {
+        // Not actual soft max. Just a test right now
+        int index = -1;
+        int max = -1;
+        for (int i = 0; i < output_layer_.neurons_.size(); i++) {
+            if (output_layer_.neurons_[i].out_.value_ > max) {
+                max = output_layer_.neurons_[i].out_.value_;
+                index = i;
+            }
+        }
+        return index;
     }
 };
-
-
 
 #endif // NN_H

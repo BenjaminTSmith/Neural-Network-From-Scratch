@@ -6,7 +6,7 @@
 #include <vector>
 #include <iostream>
 
-static std::vector<std::vector<double>> parseCSV(std::string filepath) {
+static std::vector<std::vector<double>> ParseCSV(std::string filepath) {
     std::ifstream file(filepath);
     if (!file.is_open()) {
         std::cout << "Failed to open dataset!" << std::endl;
@@ -29,6 +29,14 @@ static std::vector<std::vector<double>> parseCSV(std::string filepath) {
 
     return parsed_CSV;
 } 
+
+static std::vector<double> GetGroundTruth(const std::vector<double>& image) {
+    std::vector<double> results;
+    results.resize(10);
+    std::fill(results.begin(), results.end(), 0);
+    results[image[0]] = 1;
+    return results;
+}
 
 
 

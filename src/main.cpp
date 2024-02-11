@@ -1,31 +1,58 @@
 #include "NN.h"
 #include "LoadCSV.h"
+#include <ostream>
 
 int main() {
 
     // place mnist dataset or any csv within build directory
-    /*auto inputs = parseCSV("mnist_train.csv");
-    std::cout << inputs[0].size() << std::endl;
-    std::cout << inputs[0][783] << std::endl;
-    std::cout << inputs[0][784] << std::endl;*/
+    auto train_data = ParseCSV("mnist_train.csv");
+    std::cout << "Done parsing csv!" << std::endl;
+
+    auto test_data = ParseCSV("mnist_test.csv");
+    std::cout << "Done parsing csv!" << std::endl;
     
-    auto neural_network = new NeuralNetwork<double>(5, {10}, 10);
-    neural_network->set_input_layer({ 0.5, 3, 10, -3, 4 });
-    std::vector<double> ground_truth = {
-        1, -1, 0.3, -0.75, -1, 0.5, -0.3, -0.5, 0.5, 0.83,
-    };
+    auto neural_network = new NeuralNetwork<double>(784, {3}, 10);
+    
 
-    neural_network->ForwardPass();
-
-    std::cout << "Predictions: " << std::endl;
-    neural_network->PrintOutput();
-
-    for (int i = 0; i < 100000; ++i) {
-        neural_network->Pass(ground_truth);
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "epoch " << i << std::endl;
+        double right = 0;
+        double wrong = 0;
+        for (auto& input: train_data) {
+            std::vector<double> ground_truth = GetGroundTruth(input);
+            int answer = input[0];
+            input.erase(input.begin());
+            neural_network->set_input_layer(input);
+            neural_network->ForwardPass();
+            /*
+                Deal with accuracy here
+            */ 
+            if (neural_network->SoftMax() == answer) { right++; }
+            else { wrong++; }
+            neural_network->Prop(ground_truth);
+        }
+        // std::cout << "Accuracy " << std::endl;
+        std::cout << "epoch " << i << " done." << std::endl;
+        std::cout << "Accuracy: " << right / (right + wrong) * 100 << '%' << std::endl;
     }
 
-    std::cout << "Final Predictions: " << std::endl;
-    neural_network->PrintOutput();
+    std::cout << "Starting test data" << std::endl;
+    double right = 0;
+    double wrong = 0;
+    for (auto& input: test_data) {
+        std::vector<double> ground_truth = GetGroundTruth(input);
+        int answer = input[0];
+        input.erase(input.begin());
+        neural_network->set_input_layer(input);
+        neural_network->ForwardPass();
+        /*
+                Deal with accuracy here
+            */ 
+        if (neural_network->SoftMax() == answer) { right++; }
+        else { wrong++; }
+        // neural_network->Prop(ground_truth);
+    }
+    std::cout << "Test accuracy: " << right / (right + wrong) * 100 << '%' << std::endl;
 
     delete neural_network;
 
