@@ -18,7 +18,7 @@ static std::vector<std::vector<double>> ParseCSV(std::string filepath) {
         std::vector<double> parsed_line;
         size_t pos = 0;
         while ((pos = line.find(',')) != std::string::npos) {
-            parsed_line.push_back(std::stod(line.substr(0, pos)));
+            parsed_line.push_back(std::stod(line.substr(0, pos)) / 255);
             line.erase(0, pos + 1);
         }
         parsed_line.push_back(std::stod(line));

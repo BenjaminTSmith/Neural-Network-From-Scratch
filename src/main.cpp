@@ -11,27 +11,23 @@ int main() {
     auto test_data = ParseCSV("mnist_test.csv");
     std::cout << "Done parsing testing data!" << std::endl;
     
-    auto neural_network = new NeuralNetwork<double>(784, {30, 30, 30}, 10);
+    auto neural_network = new NeuralNetwork<double>(784, {10}, 10);
     
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 2; ++i) {
         std::cout << "epoch " << i << std::endl;
         double right = 0;
         double wrong = 0;
-        for (auto& input: train_data) {
+        for (const auto& input: train_data) {
             std::vector<double> ground_truth = GetGroundTruth(input);
             int answer = input[0];
-            input.erase(input.begin());
             neural_network->set_input_layer(input);
             neural_network->ForwardPass();
-            /*
-                Deal with accuracy here
-            */ 
+             
             if (neural_network->SoftMax() == answer) { right++; }
             else { wrong++; }
             neural_network->Prop(ground_truth);
         }
-        // std::cout << "Accuracy " << std::endl;
         std::cout << "epoch " << i << " done." << std::endl;
         std::cout << "Accuracy: " << right / (right + wrong) * 100 << '%' << std::endl;
     }
@@ -39,22 +35,15 @@ int main() {
     std::cout << "Starting test data" << std::endl;
     double right = 0;
     double wrong = 0;
-    int i = 0;
     for (auto& input: test_data) {
         std::vector<double> ground_truth = GetGroundTruth(input);
         int answer = input[0];
-        input.erase(input.begin());
         neural_network->set_input_layer(input);
         neural_network->ForwardPass();
-        /*
-                Deal with accuracy here
-            */ 
+
         if (neural_network->SoftMax() == answer) { right++; }
-        if (i % 1000 == 0) { 
-            std::cout << "Answer: " << answer << "; Guess: " << neural_network->SoftMax() << std::endl;
-        }
         else { wrong++; }
-        i++;
+        neural_network->Prop(ground_truth);
     }
     std::cout << "Test accuracy: " << right / (right + wrong) * 100 << '%' << std::endl;
 

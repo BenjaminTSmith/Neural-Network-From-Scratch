@@ -12,11 +12,11 @@ public:
     Node sum_;
     double learning_rate = 0.01;
 
-    Neuron() {}
-
     Neuron(int size) {
         weights_.resize(size);
     }   
+
+    Neuron() {}
 
     void ForwardPass(const std::vector<Neuron>& inputs) {
         sum_.value_ = 0;

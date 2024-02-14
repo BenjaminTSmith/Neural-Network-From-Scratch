@@ -91,7 +91,7 @@ public:
 
     int SoftMax() {
         // Not actual soft max. Just a test right now
-        int index = -1;
+        int index = 0;
         int max = -1;
         for (int i = 0; i < output_layer_.neurons_.size(); i++) {
             if (output_layer_.neurons_[i].out_.value_ > max) {
