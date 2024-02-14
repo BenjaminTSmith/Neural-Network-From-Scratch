@@ -67,10 +67,12 @@ public:
     }
 
     void ZeroGrad() {
+        sum_.grad_ = 0;
         out_.grad_ = 0;
         for (auto& weight: weights_) {
             weight.grad_ = 0;
         }
+        bias_.grad_ = 0;
     }
 private:
 

@@ -9,12 +9,16 @@ class NeuralNetwork {
 private:
     const int layer_count_;
     Layer<T> input_layer_;
-public:
     std::vector<Layer<Neuron>> layers_;
     Layer<Neuron> output_layer_;
+public:
 
-    void set_input_layer(const std::vector<T>& inputs) {
-        input_layer_.neurons_ = inputs;
+    std::vector<Layer<Neuron>> layers() { return layers_; }
+    Layer<Neuron> output_layer() { return output_layer_; }
+    int layer_count() { return layer_count_; }
+
+    void set_input_layer(const std::vector<T>& inputs) { 
+        input_layer_.neurons_ = inputs; 
     }
 
     NeuralNetwork(int input_layer, const std::vector<int>& hidden_layers,
@@ -64,7 +68,6 @@ public:
     void Prop(std::vector<double> ground_truth) {
         BackProp(ground_truth);
         ForwardProp();
-        // ForwardPass();
     }
 
     double MSELoss(const std::vector<double>& ground_truth) {
@@ -78,7 +81,6 @@ public:
         return (1 / static_cast<double>(ground_truth.size())) * MSE;
     }
 
-    int layer_count() { return layer_count_; }
 
     void PrintOutput() {
         for (const auto& neuron: output_layer_.neurons_) {
