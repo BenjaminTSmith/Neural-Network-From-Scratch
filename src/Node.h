@@ -32,6 +32,10 @@ public:
         return {(std::exp(2 * value_) - 1) / (std::exp(2 * value_) + 1)}; 
     }
 
+    Node ReLU() const {
+        return {value_ > 0 ? value_ : 0};
+    }
+
     double value_;
     double grad_ = 0;
 

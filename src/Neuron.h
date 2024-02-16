@@ -10,7 +10,7 @@ public:
     Node out_;
     Node bias_;
     Node sum_;
-    double learning_rate = 0.1;
+    double learning_rate = 0.01;
 
     Neuron(int size) {
         weights_.resize(size);
@@ -25,7 +25,7 @@ public:
         }
         sum_ += bias_;
 
-        out_ = sum_.tanh();
+        out_ = sum_.ReLU();
     }
 
     void ForwardPass(const std::vector<double>& inputs) {
@@ -35,12 +35,13 @@ public:
         }
         sum_ += bias_;
 
-        out_ = sum_.tanh();
+        out_ = sum_.ReLU();
     }
 
     void BackProp(std::vector<Neuron>& inputs) {
-        double temp = (std::exp(2 * sum_.value_) - 1) / (std::exp(2 * sum_.value_) + 1);
-        sum_.grad_ = (1 - temp * temp) * out_.grad_;
+        // double temp = (std::exp(2 * sum_.value_) - 1) / (std::exp(2 * sum_.value_) + 1);
+        double temp = sum_.value_ > 0 ? 1 : 0;
+        sum_.grad_ = temp * out_.grad_;
         bias_.grad_ = sum_.grad_;
 
         for (int i = 0; i < inputs.size(); i++) {
