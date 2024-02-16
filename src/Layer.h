@@ -41,8 +41,18 @@ public:
         }
     }
 
+    void OutPass(const Layer<Neuron>& inputs) {
+        for (auto& neuron: neurons_) {
+            neuron.OutPass(inputs.neurons_);
+        }
+    }
+
     void BackProp(std::vector<Node>& inputs) {
         for (auto& neuron: neurons_) { neuron.BackProp(inputs); }
+    }
+
+    void OutProp(std::vector<Node>& inputs) {
+        for (auto& neuron: neurons_) { neuron.OutProp(inputs); }
     }
 
     void BackProp(std::vector<double>& inputs) {
@@ -58,6 +68,12 @@ public:
     void BackProp(Layer<double>& inputs) {
         for (auto& neuron: neurons_) {
             neuron.BackProp(inputs.neurons_);
+        }
+    }
+
+    void OutProp(Layer<Neuron>& inputs) {
+        for (auto& neuron: neurons_) {
+            neuron.OutProp(inputs.neurons_);
         }
     }
 

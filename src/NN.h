@@ -38,13 +38,13 @@ public:
         for (int i = 1; i < layer_count_ - 2; i++) {
             layers_[i].ForwardPass(layers_[i - 1]);
         }
-        output_layer_.ForwardPass(layers_[layers_.size() - 1]);
+        output_layer_.OutPass(layers_[layers_.size() - 1]);
     }
 
     void BackProp(const std::vector<double>& ground_truth) {
-        ZeroGrad();
         std::cout << "Loss: " << MSELoss(ground_truth) << std::endl;
-        output_layer_.BackProp(layers_[layers_.size() - 1]);
+        MSELoss(ground_truth);
+        output_layer_.OutProp(layers_[layers_.size() - 1]);
         for (size_t i = layers_.size() - 1; i > 0; i--) {
             layers_[i].BackProp(layers_[i - 1]);
         }
@@ -65,7 +65,8 @@ public:
         output_layer_.ForwardProp();
     }
 
-    void Prop(std::vector<double> ground_truth) {
+    void Prop(const std::vector<double>& ground_truth) {
+        ZeroGrad();
         BackProp(ground_truth);
         ForwardProp();
     }
@@ -73,12 +74,12 @@ public:
     double MSELoss(const std::vector<double>& ground_truth) {
         double MSE = 0;
         for (int i = 0; i < ground_truth.size(); i++) {
-            MSE += std::pow(output_layer_.neurons_[i].out_.value_ 
-                            - ground_truth[i], 2);
+            MSE += (output_layer_.neurons_[i].out_.value_ - ground_truth[i]) * 
+            (output_layer_.neurons_[i].out_.value_ - ground_truth[i]);
             output_layer_.neurons_[i].out_.grad_ = 2 * 
                 (output_layer_.neurons_[i].out_.value_ - ground_truth[i]);
         }
-        return (1 / static_cast<double>(ground_truth.size())) * MSE;
+        return MSE / static_cast<double>(ground_truth.size());
     }
 
 

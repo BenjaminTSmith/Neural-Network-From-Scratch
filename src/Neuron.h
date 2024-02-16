@@ -28,6 +28,16 @@ public:
         out_ = sum_.ReLU();
     }
 
+    void OutPass(const std::vector<Neuron>& inputs) {
+        sum_.value_ = 0;
+        for (int i = 0; i < inputs.size(); i++) {
+            sum_ += inputs[i].out_.value_ * weights_[i].value_;
+        }
+        sum_ += bias_;
+
+        out_ = sum_;
+    }
+
     void ForwardPass(const std::vector<double>& inputs) {
         sum_.value_ = 0;
         for (int i = 0; i < inputs.size(); i++) {
@@ -50,9 +60,19 @@ public:
         }
     }
 
+    void OutProp(std::vector<Neuron>& inputs) {
+        sum_.grad_ = out_.grad_;
+        bias_.grad_ = sum_.grad_;
+
+        for (int i = 0; i < inputs.size(); i++) {
+            inputs[i].out_.grad_ += sum_.grad_ * weights_[i].value_;
+            weights_[i].grad_ = sum_.grad_ * inputs[i].out_.value_;
+        }
+    }
+
     void BackProp(std::vector<double>& inputs) {
-        double temp = (std::exp(2 * sum_.value_) - 1) / (std::exp(2 * sum_.value_) + 1);
-        sum_.grad_ = (1 - temp * temp) * out_.grad_;
+        double temp = sum_.value_ > 0 ? 1 : 0;
+        sum_.grad_ = temp * out_.grad_;
         bias_.grad_ = sum_.grad_;
 
         for (int i = 0; i < inputs.size(); i++) {
