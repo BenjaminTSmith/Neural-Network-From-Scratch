@@ -11,10 +11,10 @@ int main() {
     auto test_data = ParseCSV("mnist_test.csv");
     std::cout << "Done parsing testing data!" << std::endl;
     
-    auto neural_network = new NeuralNetwork<double>(784, {10}, 10);
+    auto neural_network = new NeuralNetwork<double>(784, {20}, 10);
     
 
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 50; ++i) {
         std::cout << "epoch " << i << std::endl;
         double right = 0;
         double wrong = 0;
@@ -24,8 +24,8 @@ int main() {
             neural_network->set_input_layer(input);
             neural_network->ForwardPass();
              
-            if (neural_network->SoftMax() == answer) { right++; }
-            else { wrong++; }
+            // if (neural_network->SoftMax() == answer) { right++; }
+            // else { wrong++; }
             neural_network->Prop(ground_truth);
         }
         std::cout << "epoch " << i << " done." << std::endl;
@@ -41,13 +41,12 @@ int main() {
         neural_network->set_input_layer(input);
         neural_network->ForwardPass();
 
-        if (neural_network->SoftMax() == answer) { right++; }
-        else { wrong++; }
+        //if (neural_network->SoftMax() == answer) { right++; }
+        //else { wrong++; }
         neural_network->Prop(ground_truth);
     }
+    neural_network->PrintOutput();
     std::cout << "Test accuracy: " << right / (right + wrong) * 100 << '%' << std::endl;
-
-    delete neural_network;
 
     return 0;
 }

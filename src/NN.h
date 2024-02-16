@@ -43,7 +43,7 @@ public:
 
     void BackProp(const std::vector<double>& ground_truth) {
         ZeroGrad();
-        MSELoss(ground_truth);
+        std::cout << "Loss: " << MSELoss(ground_truth) << std::endl;
         output_layer_.BackProp(layers_[layers_.size() - 1]);
         for (size_t i = layers_.size() - 1; i > 0; i--) {
             layers_[i].BackProp(layers_[i - 1]);
@@ -87,19 +87,6 @@ public:
             std::cout << neuron.out_.value_ << std::endl;
         }
         std::cout << std::endl;
-    }
-
-    int SoftMax() {
-        // Not actual soft max. Just a test right now
-        int index = 0;
-        int max = -1;
-        for (int i = 0; i < output_layer_.neurons_.size(); i++) {
-            if (output_layer_.neurons_[i].out_.value_ > max) {
-                max = output_layer_.neurons_[i].out_.value_;
-                index = i;
-            }
-        }
-        return index;
     }
 };
 

@@ -10,7 +10,7 @@ public:
     Node out_;
     Node bias_;
     Node sum_;
-    double learning_rate = 0.01;
+    double learning_rate = 0.1;
 
     Neuron(int size) {
         weights_.resize(size);
