@@ -11,11 +11,13 @@ private:
     Layer<T> input_layer_;
     std::vector<Layer<Neuron>> layers_;
     Layer<Neuron> output_layer_;
+    double loss_ = 0;
 public:
 
     std::vector<Layer<Neuron>> layers() { return layers_; }
     Layer<Neuron> output_layer() { return output_layer_; }
     int layer_count() { return layer_count_; }
+    double loss() { return loss_; }
 
     void set_input_layer(const std::vector<T>& inputs) { 
         input_layer_.neurons_ = inputs; 
@@ -42,7 +44,7 @@ public:
     }
 
     void BackProp(const std::vector<double>& ground_truth) {
-        std::cout << "Loss: " << MSELoss(ground_truth) << std::endl;
+        loss_ =  MSELoss(ground_truth);
         MSELoss(ground_truth);
         output_layer_.OutProp(layers_[layers_.size() - 1]);
         for (size_t i = layers_.size() - 1; i > 0; i--) {

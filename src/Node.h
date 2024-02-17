@@ -28,7 +28,6 @@ public:
     void operator+=(const double other) { value_ += other; }
 
     Node tanh() const { 
-        double value = (std::exp(2 * value_) - 1) / (std::exp(2 * value_) + 1);
         return {(std::exp(2 * value_) - 1) / (std::exp(2 * value_) + 1)}; 
     }
 
