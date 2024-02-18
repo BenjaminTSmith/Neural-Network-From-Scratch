@@ -94,12 +94,23 @@ public:
     }
 
     void SoftMax() {
-        double denominator = 0;
-        for (auto& neuron: output_layer_.neurons_) {
-            denominator += std::exp(neuron.out_.value_);
+
+        double max_value = output_layer_.neurons_[0].out_.value_;
+        for (int i = 1; i < output_layer_.neurons_.size(); ++i) {
+            if (output_layer_.neurons_[i].out_.value_ > max_value) {
+                max_value = output_layer_.neurons_[i].out_.value_;
+            }
         }
+        // Calculate the softmax values by subtracting the max value
+        double summation = 0;
         for (auto& neuron: output_layer_.neurons_) {
-            neuron.out_.value_ = std::exp(neuron.out_.value_) / denominator;
+            neuron.out_.value_ = std::exp(neuron.out_.value_ - max_value); // Subtract max_input
+            summation += neuron.out_.value_;
+        }
+
+        // Normalize the softmax values
+        for (auto& neuron: output_layer_.neurons_) {
+            neuron.out_.value_ /= summation;
         }
     }
 };
