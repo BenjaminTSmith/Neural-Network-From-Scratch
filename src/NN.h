@@ -41,6 +41,7 @@ public:
             layers_[i].ForwardPass(layers_[i - 1]);
         }
         output_layer_.OutPass(layers_[layers_.size() - 1]);
+        // SoftMax();
     }
 
     void BackProp(const std::vector<double>& ground_truth) {
@@ -90,6 +91,16 @@ public:
             std::cout << neuron.out_.value_ << std::endl;
         }
         std::cout << std::endl;
+    }
+
+    void SoftMax() {
+        double denominator = 0;
+        for (auto& neuron: output_layer_.neurons_) {
+            denominator += std::exp(neuron.out_.value_);
+        }
+        for (auto& neuron: output_layer_.neurons_) {
+            neuron.out_.value_ = std::exp(neuron.out_.value_) / denominator;
+        }
     }
 };
 

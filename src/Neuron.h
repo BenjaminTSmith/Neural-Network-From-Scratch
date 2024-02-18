@@ -49,7 +49,6 @@ public:
     }
 
     void BackProp(std::vector<Neuron>& inputs) {
-        // double temp = (std::exp(2 * sum_.value_) - 1) / (std::exp(2 * sum_.value_) + 1);
         double temp = sum_.value_ > 0 ? 1 : 0;
         sum_.grad_ = temp * out_.grad_;
         bias_.grad_ = sum_.grad_;
