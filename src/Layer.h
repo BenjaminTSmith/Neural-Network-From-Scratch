@@ -3,7 +3,6 @@
 
 #include "Neuron.h"
 #include <algorithm>
-#include <iterator>
 
 template<typename T>
 class Layer {

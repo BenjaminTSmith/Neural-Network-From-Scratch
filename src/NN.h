@@ -41,7 +41,7 @@ public:
             layers_[i].ForwardPass(layers_[i - 1]);
         }
         output_layer_.OutPass(layers_[layers_.size() - 1]);
-        // SoftMax();
+        SoftMax();
     }
 
     void BackProp(const std::vector<double>& ground_truth) {
@@ -79,6 +79,7 @@ public:
         for (int i = 0; i < ground_truth.size(); i++) {
             MSE += (output_layer_.neurons_[i].out_.value_ - ground_truth[i]) * 
             (output_layer_.neurons_[i].out_.value_ - ground_truth[i]);
+
             output_layer_.neurons_[i].out_.grad_ = 2 * 
                 (output_layer_.neurons_[i].out_.value_ - ground_truth[i]);
         }
@@ -101,14 +102,13 @@ public:
                 max_value = output_layer_.neurons_[i].out_.value_;
             }
         }
-        // Calculate the softmax values by subtracting the max value
+
         double summation = 0;
         for (auto& neuron: output_layer_.neurons_) {
             neuron.out_.value_ = std::exp(neuron.out_.value_ - max_value); // Subtract max_input
             summation += neuron.out_.value_;
         }
 
-        // Normalize the softmax values
         for (auto& neuron: output_layer_.neurons_) {
             neuron.out_.value_ /= summation;
         }

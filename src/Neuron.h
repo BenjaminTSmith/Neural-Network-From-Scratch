@@ -60,7 +60,7 @@ public:
     }
 
     void OutProp(std::vector<Neuron>& inputs) {
-        sum_.grad_ = out_.grad_;
+        sum_.grad_ = out_.grad_ * out_.value_ * (1 - out_.value_);
         bias_.grad_ = sum_.grad_;
 
         for (int i = 0; i < inputs.size(); i++) {

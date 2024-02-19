@@ -4,15 +4,21 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <tuple>
 #include <iostream>
 
-static std::vector<std::vector<double>> ParseCSV(std::string filepath) {
+struct Image {
+    int label = 0;
+    std::vector<double> data;
+};
+
+static std::vector<Image> ParseCSV(std::string filepath) {
     std::ifstream file(filepath);
     if (!file.is_open()) {
         std::cout << "Failed to open dataset!" << std::endl;
     }
     std::string line;
-    std::vector<std::vector<double>> parsed_CSV;
+    std::vector<Image> parsed_CSV;
 
     while (std::getline(file, line)) {
         std::vector<double> parsed_line;
@@ -22,7 +28,10 @@ static std::vector<std::vector<double>> ParseCSV(std::string filepath) {
             line.erase(0, pos + 1);
         }
         parsed_line.push_back(std::stod(line));
-        parsed_CSV.push_back(parsed_line);
+
+        int label = parsed_line[0] * 255;
+        parsed_line.erase(parsed_line.begin());
+        parsed_CSV.push_back({label, parsed_line});
     }
 
     file.close();
@@ -30,11 +39,11 @@ static std::vector<std::vector<double>> ParseCSV(std::string filepath) {
     return parsed_CSV;
 } 
 
-static std::vector<double> GetGroundTruth(const std::vector<double>& image) {
+static std::vector<double> GetGroundTruth(int label) {
     std::vector<double> results;
     results.resize(10);
     std::fill(results.begin(), results.end(), 0);
-    results[image[0]] = 1;
+    results[label] = 1;
     return results;
 }
 
