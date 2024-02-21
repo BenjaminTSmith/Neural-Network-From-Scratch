@@ -10,7 +10,8 @@ public:
     Node out_;
     Node bias_;
     Node sum_;
-    double learning_rate = 0.01;
+    double learning_rate_ = 0.01;
+    double activation_grad_ = 0;
 
     Neuron(int size) {
         weights_.resize(size);
@@ -27,8 +28,7 @@ public:
     }
 
     void BackProp(std::vector<Neuron>& inputs) {
-        double temp = sum_.value_ > 0 ? 1 : 0;
-        sum_.grad_ = temp * out_.grad_;
+        sum_.grad_ = activation_grad_ * out_.grad_;
         bias_.grad_ = sum_.grad_;
 
         for (int i = 0; i < inputs.size(); i++) {
@@ -39,14 +39,14 @@ public:
 
     void ForwardProp() {
         for (auto& weight: weights_) {
-            weight.value_ -= weight.grad_ * learning_rate;
+            weight.value_ -= weight.grad_ * learning_rate_;
         }
-        bias_.value_ -= bias_.grad_ * learning_rate;
+        bias_.value_ -= bias_.grad_ * learning_rate_;
     }
 
     void ZeroGrad() {
-        sum_.grad_ = 0;
         out_.grad_ = 0;
+        sum_.grad_ = 0;
         for (auto& weight: weights_) {
             weight.grad_ = 0;
         }

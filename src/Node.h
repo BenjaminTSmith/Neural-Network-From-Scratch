@@ -21,6 +21,9 @@ struct Node {
     Node operator+(const Node& other) const { return {value_ + other.value_}; }
     Node operator+(const double other) const { return {value_ + other}; }
 
+    Node operator-(const Node& other) const { return {value_ - other.value_}; }
+    Node operator-(const double other) const { return {value_ - other}; }
+
     Node operator*(const Node& other) const { return {value_ * other.value_}; }
     Node operator*(const double other) const { return {value_ * other}; }
 
