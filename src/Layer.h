@@ -8,7 +8,7 @@
 class Layer {
 public:
     std::vector<Neuron> neurons_;
-    double loss_ = 0;
+    double loss_ = 1000;
 
     Layer(int size, int nins) {
         neurons_.resize(size);
@@ -57,17 +57,17 @@ public:
     void ReLU() {
         for (auto& neuron: neurons_) {
             neuron.out_ = neuron.out_ > 0 ? neuron.out_ : 0;
-            neuron.activation_grad_ = neuron.sum_ > 0 ? 1 : 0;
+            neuron.activation_grad_ *= neuron.sum_ > 0 ? 1 : 0;
         }
     }
 
     void MSE(const std::vector<double>& ground_truth) {
+        loss_ = 0;
         for (int i = 0; i < neurons_.size(); ++i) {
             double temp = neurons_[i].out_.value_ - ground_truth[i];
-            neurons_[i].out_.value_ = temp * temp;
-            loss_ += neurons_[i].out_.value_;
+            loss_ += temp * temp;
 
-            neurons_[i].activation_grad_ = 2.0 / ground_truth.size() * temp;
+            neurons_[i].activation_grad_ *= 2.0 / ground_truth.size() * temp;
             neurons_[i].out_.grad_ = 1;
         }
         loss_ /= neurons_.size();

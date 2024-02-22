@@ -1,16 +1,19 @@
 #include "Layer.h"
 
 int main() {
-    std::vector<double> inputs = {-4, 23, 7};
-    std::vector<double> ground_truth = {3, 1, 5};
+    std::vector<double> inputs;
+    std::vector<double> ground_truth = {3, 1, 5, 0, 3, -5};
+    inputs.resize(800);
+    std::fill(inputs.begin(), inputs.end(), 0);
 
-    Layer input_layer(3);
-    Layer hidden_layer(5, 3);
-    Layer output_layer(3, 5);
+    Layer input_layer(800);
+    Layer hidden_layer(10, 800);
+    Layer output_layer(6, 10);
 
     input_layer.SetInputs(inputs);
 
-    for (int i = 0; i < 3; i++) {
+    int i = 1;
+    while (output_layer.loss_ > 0.01 and i < 10) {
         input_layer.ZeroGrad();
         hidden_layer.ZeroGrad();
         output_layer.ZeroGrad();
@@ -26,11 +29,10 @@ int main() {
 
         hidden_layer.ForwardProp();
         output_layer.ForwardProp();
-        // std::cout << output_layer.loss_ << std::endl;
-        // output_layer.PrintOutput();
+        i++;
     }
+    std::cout << '\n';
     output_layer.PrintOutput();
-
 
     return 0;
 }

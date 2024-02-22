@@ -11,7 +11,7 @@ public:
     Node bias_;
     Node sum_;
     double activation_grad_ = 1;
-    double learning_rate_ = 0.1;
+    double learning_rate_ = 0.5;
 
     Neuron(int size) {
         weights_.resize(size);
@@ -25,7 +25,7 @@ public:
             sum_ += inputs[i].out_.value_ * weights_[i].value_;
         }
         sum_ += bias_;
-        out_ = sum_;
+        out_.value_ = sum_.value_;
     }
 
     void BackProp(std::vector<Neuron>& inputs) {
@@ -46,6 +46,7 @@ public:
     }
 
     void ZeroGrad() {
+        activation_grad_ = 1;
         out_.grad_ = 0;
         sum_.grad_ = 0;
         for (auto& weight: weights_) {
