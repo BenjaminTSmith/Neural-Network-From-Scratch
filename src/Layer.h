@@ -79,16 +79,18 @@ public:
         for (auto& neuron: neurons_) {
             if (neuron.out_.value_ > max) { max = neuron.out_.value_; }
         }
+        std::cout << "Max: " << max << std::endl;
 
         double sum = 0;
         for (auto& neuron: neurons_) {
-            sum += std::exp(max - neuron.out_.value_);
+            sum += std::exp(neuron.out_.value_ - max);
             std::cout << "Sum: " << sum << std::endl;
         }
 
         for (auto& neuron: neurons_) {
-            neuron.out_.value_ = std::exp(max - neuron.out_.value_) / sum;
-            std::cout << "Max: " << max << std::endl;
+            std::cout << "Out pre sm value: " << neuron.out_.value_ << std::endl;
+            std::cout << std::exp(neuron.out_.value_ - max) << std::endl;
+            neuron.out_.value_ = std::exp(neuron.out_.value_ - max) / sum;
             std::cout << "Out value: " << neuron.out_.value_ << std::endl;
             neuron.activation_grad_ *= neuron.out_.value_ * (1 - neuron.out_.value_);
         }
