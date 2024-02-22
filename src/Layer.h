@@ -2,6 +2,7 @@
 #define LAYER_H
 
 #include "Neuron.h"
+#include <cstdlib>
 #include <iostream>
 #include <cmath>
 #include <regex>
