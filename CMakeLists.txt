@@ -4,7 +4,6 @@ project(neural_network)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(main src/main.cpp)
-add_executable(test src/test.cpp)
 
 target_include_directories(main PUBLIC include/)
 
