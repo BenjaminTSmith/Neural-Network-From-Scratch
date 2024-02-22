@@ -3,6 +3,7 @@
 
 #include "Neuron.h"
 #include <iostream>
+#include <stdexcept>
 
 class Layer {
 public:
@@ -55,19 +56,19 @@ public:
 
     void ReLU() {
         for (auto& neuron: neurons_) {
-            neuron.out_.value_ = neuron.sum_ > 0 ? neuron.sum_.value_ : 0;
-            neuron.out_.grad_ = neuron.sum_ > 0 ? 1 : 0;
+            neuron.out_ = neuron.out_ > 0 ? neuron.out_ : 0;
+            neuron.activation_grad_ = neuron.sum_ > 0 ? 1 : 0;
         }
     }
 
-    void MSE(const std::vector<double> ground_truth) {
+    void MSE(const std::vector<double>& ground_truth) {
         for (int i = 0; i < neurons_.size(); ++i) {
-            neurons_[i].out_.value_ = (neurons_[i].out_.value_ - ground_truth[i]) *
-                               (neurons_[i].out_.value_ - ground_truth[i]);
+            double temp = neurons_[i].out_.value_ - ground_truth[i];
+            neurons_[i].out_.value_ = temp * temp;
             loss_ += neurons_[i].out_.value_;
 
-            neurons_[i].out_.grad_ = 2 * (neurons_[i].out_.value_ - 
-                                            ground_truth[i]);
+            neurons_[i].activation_grad_ = 2.0 / ground_truth.size() * temp;
+            neurons_[i].out_.grad_ = 1;
         }
         loss_ /= neurons_.size();
     }

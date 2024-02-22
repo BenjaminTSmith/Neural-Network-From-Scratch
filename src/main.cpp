@@ -1,8 +1,8 @@
 #include "Layer.h"
 
 int main() {
-    std::vector<double> ground_truth = {3, 1, 5};
     std::vector<double> inputs = {-4, 23, 7};
+    std::vector<double> ground_truth = {3, 1, 5};
 
     Layer input_layer(3);
     Layer hidden_layer(5, 3);
@@ -26,9 +26,10 @@ int main() {
 
         hidden_layer.ForwardProp();
         output_layer.ForwardProp();
-        std::cout << output_layer.loss_ << std::endl;
-        output_layer.PrintOutput();
+        // std::cout << output_layer.loss_ << std::endl;
+        // output_layer.PrintOutput();
     }
+    output_layer.PrintOutput();
 
 
     return 0;
