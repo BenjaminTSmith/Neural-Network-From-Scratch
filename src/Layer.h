@@ -62,6 +62,13 @@ public:
         }
     }
 
+    void LeakyReLU() {
+        for (auto& neuron: neurons_) {
+            neuron.out_ = neuron.out_ > 0 ? neuron.out_ : neuron.out_ * 0.1;
+            neuron.activation_grad_ *= neuron.sum_ > 0 ? 1 : 0.1;
+        }
+    }
+
     void MSE(const std::vector<double>& ground_truth) {
         loss_ = 0;
         for (int i = 0; i < neurons_.size(); ++i) {
@@ -79,19 +86,14 @@ public:
         for (auto& neuron: neurons_) {
             if (neuron.out_.value_ > max) { max = neuron.out_.value_; }
         }
-        std::cout << "Max: " << max << std::endl;
 
         double sum = 0;
         for (auto& neuron: neurons_) {
             sum += std::exp(neuron.out_.value_ - max);
-            std::cout << "Sum: " << sum << std::endl;
         }
 
         for (auto& neuron: neurons_) {
-            std::cout << "Out pre sm value: " << neuron.out_.value_ << std::endl;
-            std::cout << std::exp(neuron.out_.value_ - max) << std::endl;
             neuron.out_.value_ = std::exp(neuron.out_.value_ - max) / sum;
-            std::cout << "Out value: " << neuron.out_.value_ << std::endl;
             neuron.activation_grad_ *= neuron.out_.value_ * (1 - neuron.out_.value_);
         }
     }
