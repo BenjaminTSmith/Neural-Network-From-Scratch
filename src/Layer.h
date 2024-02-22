@@ -3,7 +3,8 @@
 
 #include "Neuron.h"
 #include <iostream>
-#include <stdexcept>
+#include <cmath>
+#include <regex>
 
 class Layer {
 public:
@@ -74,7 +75,23 @@ public:
     }
 
     void SoftMax() {
-        // todo
+        double max = neurons_[0].out_.value_;
+        for (auto& neuron: neurons_) {
+            if (neuron.out_.value_ > max) { max = neuron.out_.value_; }
+        }
+
+        double sum = 0;
+        for (auto& neuron: neurons_) {
+            sum += std::exp(max - neuron.out_.value_);
+            std::cout << "Sum: " << sum << std::endl;
+        }
+
+        for (auto& neuron: neurons_) {
+            neuron.out_.value_ = std::exp(max - neuron.out_.value_) / sum;
+            std::cout << "Max: " << max << std::endl;
+            std::cout << "Out value: " << neuron.out_.value_ << std::endl;
+            neuron.activation_grad_ *= neuron.out_.value_ * (1 - neuron.out_.value_);
+        }
     }
 
 };
