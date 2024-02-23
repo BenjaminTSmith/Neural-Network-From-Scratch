@@ -109,11 +109,13 @@ public:
     void SparseCategoricalCrossEntropy(const std::vector<double>& one_hot_vector) {
         loss_ = 0;
         auto output = GetOutput();
-        Clip(output, 1e-7, 1 - 1e-7);
+        Clip(output, 1e-3, 1 - 1e-3);
         double test = 1 - 1e-7;
         for (int i = 0; i < one_hot_vector.size(); ++i) {
-            neurons_[i].activation_grad_ *= output[i] - one_hot_vector[i];
             loss_ += -one_hot_vector[i] * std::log(output[i]);
+
+            neurons_[i].activation_grad_ *= (output[i] - one_hot_vector[i]);
+            neurons_[i].out_.grad_ = 1;
         }
         loss_ /= one_hot_vector.size();
     }

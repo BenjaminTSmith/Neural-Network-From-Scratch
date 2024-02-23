@@ -1,8 +1,9 @@
 #include "Layer.h"
 #include "CSVParser.h"
+#include "Eigen/Eigen"
 
 int main() {
-
+    
     int epochs = 10;
     int batch_size = 64;
     std::vector<Image> images = ParseCSV("mnist_test.csv");
@@ -28,10 +29,19 @@ int main() {
             output_layer.BackProp(hidden_layer2);
             hidden_layer2.BackProp(hidden_layer1);
             hidden_layer1.BackProp(input_layer);
+            
+            output_layer.ForwardProp();
+            hidden_layer2.ForwardProp();
+            hidden_layer1.ForwardProp();
+
+            input_layer.ZeroGrad();
+            hidden_layer1.ZeroGrad();
+            hidden_layer2.ZeroGrad();
+            output_layer.ZeroGrad();
 
 
-            // std::cout << output_layer.loss_ << std::endl;
-            if (j % batch_size == 0) {
+            std::cout << output_layer.loss_ << std::endl;
+            /*if (j % batch_size == 0) {
                 output_layer.AverageGrad(batch_size);
                 hidden_layer1.AverageGrad(batch_size);
                 hidden_layer2.AverageGrad(batch_size);
@@ -44,7 +54,7 @@ int main() {
                 hidden_layer2.ZeroGrad();
                 output_layer.ZeroGrad();
                 std::cout << "batch loss: " << output_layer.loss_ << std::endl;
-            }
+            }*/
         }
     }
 

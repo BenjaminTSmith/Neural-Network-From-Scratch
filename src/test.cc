@@ -20,7 +20,7 @@ int main() {
 
         // std::cout << "epoch " << i << std::endl;
         hidden_layer.ForwardPass(input_layer);
-        hidden_layer.ReLU();
+        hidden_layer.LeakyReLU();
         output_layer.ForwardPass(hidden_layer);
         output_layer.SoftMax();
         output_layer.SparseCategoricalCrossEntropy(ground_truth);
