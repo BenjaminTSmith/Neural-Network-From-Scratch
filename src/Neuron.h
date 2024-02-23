@@ -11,7 +11,7 @@ public:
     Node bias_;
     Node sum_;
     double activation_grad_ = 1;
-    double learning_rate_ = 0.1;
+    double learning_rate_ = 1;
 
     Neuron(int size) {
         weights_.resize(size);

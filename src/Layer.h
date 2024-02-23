@@ -1,6 +1,7 @@
 #ifndef LAYER_H
 #define LAYER_H
 
+#include "Matrix.h"
 #include "Neuron.h"
 #include <iostream>
 #include <cmath>
@@ -93,7 +94,7 @@ public:
         }
     }
 
-    void MSE(const std::vector<int>& ground_truth) {
+    void MSE(const std::vector<double>& ground_truth) {
         loss_ = 0;
         for (int i = 0; i < neurons_.size(); ++i) {
             double temp = neurons_[i].out_.value_ - ground_truth[i];
@@ -106,7 +107,15 @@ public:
     }
 
     void SparseCategoricalCrossEntropy(const std::vector<double>& one_hot_vector) {
-        
+        loss_ = 0;
+        auto output = GetOutput();
+        Clip(output, 1e-7, 1 - 1e-7);
+        double test = 1 - 1e-7;
+        for (int i = 0; i < one_hot_vector.size(); ++i) {
+            neurons_[i].activation_grad_ *= output[i] - one_hot_vector[i];
+            loss_ += -one_hot_vector[i] * std::log(output[i]);
+        }
+        loss_ /= one_hot_vector.size();
     }
 };
 

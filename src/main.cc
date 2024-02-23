@@ -29,17 +29,6 @@ int main() {
             hidden_layer2.BackProp(hidden_layer1);
             hidden_layer1.BackProp(input_layer);
 
-            auto output = output_layer.GetOutput();
-            int max = 0;
-            int choice = 0;
-            for (int k = 0; k < output.size(); ++k) {
-                if (output[k] > max) {
-                    choice = k;
-                    max = output[k];
-                }
-            }
-
-            // output_layer.PrintOutput();
 
             // std::cout << output_layer.loss_ << std::endl;
             if (j % batch_size == 0) {

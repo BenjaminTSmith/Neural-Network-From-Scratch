@@ -11,7 +11,7 @@
 struct Image {
     int label = 0;
     std::vector<double> data;
-    std::vector<int> one_hot_label; 
+    std::vector<double> one_hot_label; 
 };
 
 static std::vector<double> GetGroundTruth(int label) {
