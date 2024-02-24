@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(main src/main.cc)
-add_executable(test src/test.cc)
 
-target_include_directories(main PUBLIC include/)
+target_include_directories(main PUBLIC include)
 

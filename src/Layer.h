@@ -1,4 +1,4 @@
-#ifndef LAYER_H
+/*#ifndef LAYER_H
 #define LAYER_H
 
 #include "Matrix.h"
@@ -122,4 +122,4 @@ public:
 };
 
 
-#endif // !LAYER_H
+#endif // !LAYER_H*/

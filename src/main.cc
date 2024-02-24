@@ -1,10 +1,8 @@
-#include "Layer.h"
-#include "CSVParser.h"
-#include "Eigen/Eigen"
+#include "Neuron.h"
 
 int main() {
     
-    int epochs = 10;
+    /*int epochs = 10;
     int batch_size = 64;
     std::vector<Image> images = ParseCSV("mnist_test.csv");
 
@@ -41,26 +39,22 @@ int main() {
 
 
             std::cout << output_layer.loss_ << std::endl;
-            /*if (j % batch_size == 0) {
-                output_layer.AverageGrad(batch_size);
-                hidden_layer1.AverageGrad(batch_size);
-                hidden_layer2.AverageGrad(batch_size);
-                hidden_layer2.ForwardProp();
-                hidden_layer1.ForwardProp();
-                output_layer.ForwardProp();
-
-                input_layer.ZeroGrad();
-                hidden_layer1.ZeroGrad();
-                hidden_layer2.ZeroGrad();
-                output_layer.ZeroGrad();
-                std::cout << "batch loss: " << output_layer.loss_ << std::endl;
-            }*/
         }
     }
 
     std::cout << '\n';
 
-    output_layer.PrintOutput();
+    output_layer.PrintOutput();*/
+
+    Neuron test(9);
+    RowVector test_vector(9);
+    Matrix test_matrix(9, 9);
+    test_vector.setRandom();
+    test_matrix.setRandom();
+    std::cout << test.ForwardPass(test_vector) << std::endl;
+    std::cout << std::endl;
+
+    std::cout << test.ForwardPass(test_matrix) << std::endl;
 
     return 0;
 }
