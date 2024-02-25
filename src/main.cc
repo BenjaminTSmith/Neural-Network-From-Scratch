@@ -1,3 +1,4 @@
+#include "Layer.h"
 #include "Neuron.h"
 #include <iostream>
 
@@ -47,16 +48,10 @@ int main() {
 
     output_layer.PrintOutput();*/
 
-    nn::Neuron test(3);
-    RowVector test_vector(9);
-    Matrix test_matrix(3, 3);
-    test_vector.setRandom();
-
-    test_matrix.setRandom();
-
-    std::cout << test_matrix << std::endl;
-    std::cout << std::endl;
-    std::cout << test.ForwardPass(test_matrix) << std::endl;
+    nn::Layer layer(3, 3);
+    Matrix test(1, 3);
+    test.setRandom();
+    std::cout << layer.ForwardPass(test) << std::endl;
 
     return 0;
 }
