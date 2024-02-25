@@ -1,4 +1,4 @@
-/*#ifndef LAYER_H
+#ifndef LAYER_H
 #define LAYER_H
 
 #include "Matrix.h"
@@ -8,65 +8,49 @@
 
 class Layer {
 public:
-    std::vector<Neuron> neurons_;
+    std::vector<nn::Neuron> neurons_;
     double loss_ = 1000;
 
     Layer(int size, int nins) {
         neurons_.resize(size);
-        std::fill(neurons_.begin(), neurons_.end(), Neuron(nins));
+        std::fill(neurons_.begin(), neurons_.end(), nn::Neuron(nins));
     }
 
     Layer(int size) {
         neurons_.resize(size);
-        std::fill(neurons_.begin(), neurons_.end(), Neuron(0));
+        std::fill(neurons_.begin(), neurons_.end(), nn::Neuron(0));
     }
 
     void SetInputLayer(const std::vector<double>& inputs) {
         for (int i = 0; i < inputs.size(); ++i) { 
-            neurons_[i].out_.value_ = inputs[i]; 
+            neurons_[i].out_ = inputs[i]; 
         }
     }
 
-    Neuron& operator[](int index) { return neurons_[index]; }
+    nn::Neuron& operator[](int index) { return neurons_[index]; }
 
     void PrintOutput() {
         for (const auto& neuron: neurons_) {
-            std::cout << neuron.out_.value_ << std::endl;
+            std::cout << neuron.out_ << std::endl;
         }
     }
 
     [[nodiscard]]  std::vector<double> GetOutput() {
         std::vector<double> output;
         for (const auto& neuron: neurons_) {
-            output.push_back(neuron.out_.value_);
+            output.push_back(neuron.out_);
         }
         return output;
-    }
-
-    void ForwardPass(const Layer& inputs) {
-        for (auto& neuron: neurons_) { neuron.ForwardPass(inputs.neurons_); }
     }
 
     void BackProp(Layer& inputs) {
         for (auto& neuron: neurons_) { neuron.BackProp(inputs.neurons_); }
     }
 
-    void ForwardProp() {
-        for (auto& neuron: neurons_) { neuron.ForwardProp(); }
-    }
-
-    void ZeroGrad() {
-        for (auto& neuron: neurons_) { neuron.ZeroGrad(); }
-    }
-
-    void AverageGrad(int batch_size) {
-        for (auto& neuron: neurons_) { neuron.AverageGrad(batch_size); }
-    }
-
     void ReLU() {
         for (auto& neuron: neurons_) {
             neuron.out_ = neuron.out_ > 0 ? neuron.out_ : 0;
-            neuron.activation_grad_ *= neuron.sum_ > 0 ? 1 : 0;
+            neuron.activation_grad_ = neuron.sum_ > 0 ? 1 : 0;
         }
     }
 
@@ -122,4 +106,4 @@ public:
 };
 
 
-#endif // !LAYER_H*/
+#endif // !LAYER_H

@@ -1,7 +1,8 @@
 #include "Neuron.h"
+#include <iostream>
 
 int main() {
-    
+
     /*int epochs = 10;
     int batch_size = 64;
     std::vector<Image> images = ParseCSV("mnist_test.csv");
@@ -27,7 +28,7 @@ int main() {
             output_layer.BackProp(hidden_layer2);
             hidden_layer2.BackProp(hidden_layer1);
             hidden_layer1.BackProp(input_layer);
-            
+
             output_layer.ForwardProp();
             hidden_layer2.ForwardProp();
             hidden_layer1.ForwardProp();
@@ -46,14 +47,15 @@ int main() {
 
     output_layer.PrintOutput();*/
 
-    Neuron test(9);
+    nn::Neuron test(3);
     RowVector test_vector(9);
-    Matrix test_matrix(9, 9);
+    Matrix test_matrix(3, 3);
     test_vector.setRandom();
-    test_matrix.setRandom();
-    std::cout << test.ForwardPass(test_vector) << std::endl;
-    std::cout << std::endl;
 
+    test_matrix.setRandom();
+
+    std::cout << test_matrix << std::endl;
+    std::cout << std::endl;
     std::cout << test.ForwardPass(test_matrix) << std::endl;
 
     return 0;
