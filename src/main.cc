@@ -48,10 +48,14 @@ int main() {
 
     output_layer.PrintOutput();*/
 
-    nn::Layer layer(3, 3);
+    nn::Layer layer(1, 3);
     Matrix test(1, 3);
     test.setRandom();
+    auto grads = Matrix(1, 3);
+    grads.fill(0);
     std::cout << layer.ForwardPass(test) << std::endl;
+    layer.BackProp(test, grads);
+    std::cout << grads << std::endl;
 
     return 0;
 }

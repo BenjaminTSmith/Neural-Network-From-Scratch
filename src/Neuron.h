@@ -13,7 +13,9 @@ class Neuron {
 public:
     Matrix out_;
     ColVector weights_;
+    ColVector weight_grads_;
     double bias_;
+    double bias_grad_;
     double learning_rate_ = 1;
     double delta_;
 
@@ -32,9 +34,10 @@ public:
         return out_;
     }
 
-    void BackProp(const Matrix& inputs) {
-        bias_ -= delta_ * learning_rate_;
-        weights_ -= inputs.colwise().mean() * learning_rate_ * delta_;
+    void BackProp(const Matrix& inputs, Matrix& input_grads) {
+        bias_grad_ = delta_ * learning_rate_;
+        weight_grads_ = inputs.colwise().mean() * delta_;
+        input_grads += weights_.transpose() * delta_;
     }
 };
 
