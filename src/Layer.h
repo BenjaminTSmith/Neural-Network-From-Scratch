@@ -10,7 +10,7 @@ class Layer {
 public:
     std::vector<nn::Neuron> neurons_;
     Matrix out_;
-    ColVector deltas_;
+    Matrix deltas_;
 
     Layer(int size, int nins) {
         neurons_.resize(size);
@@ -62,6 +62,7 @@ public:
         // with respect to instead of the Neuron having to keep track of it.
         // This will make it so that vectors of neurons don't have to
         // continuously be converted to and from matrices and vectors.
+        BackProp(prev_layer.out_, prev_layer.deltas_);
     }
 
 };

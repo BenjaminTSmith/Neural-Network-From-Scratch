@@ -12,23 +12,33 @@ struct Node {
 
     Node(double value) : value(value) {}
 
-    Node operator+(const Node& other) const { return {value + other.value}; }
-    Node operator+(const double other) const { return {value + other}; }
+    Node operator+(const Node& other) const { return { value + other.value }; }
+    Node operator+(const double other) const { return { value + other }; }
 
-    Node operator-(const Node& other) const { return {value - other.value}; }
-    Node operator-(const double other) const { return {value - other}; }
+    Node operator-(const Node& other) const { return { value - other.value }; }
+    Node operator-(const double other) const { return { value - other }; }
 
-    Node operator*(const Node& other) const { return {value * other.value}; }
-    Node operator*(const double other) const { return {value * other}; }
+    Node operator*(const Node& other) const { return { value * other.value }; }
+    Node operator*(const double other) const { return { value * other }; }
 
-    Node operator/(const Node& other) const { return {value / other.value}; }
-    Node operator/(const double other) const { return {value / other}; }
-
-    bool operator>(const double other) const { return value > other; }
-    bool operator<(const double other) const { return value < other; }
+    Node operator/(const Node& other) const { return { value / other.value }; }
+    Node operator/(const double other) const { return { value / other }; }
 
     void operator+=(const Node& other) { value += other.value; }
     void operator+=(const double other) { value += other; }
+
+    void operator-=(const Node& other) { value -= other.value; }
+    void operator-=(const double other) { value -= other; }
+
+    void operator*=(const Node& other) { value *= other.value; }
+    void operator*=(const double other) { value *= other; }
+
+    void operator/=(const Node& other) { value /= other.value; }
+    void operator/=(const double other) { value /= other; }
+
+
+    bool operator>(const double other) const { return value > other; }
+    bool operator<(const double other) const { return value < other; }
 
     void operator()() { value -= delta; }
 
@@ -48,8 +58,8 @@ template<> struct NumTraits<nn::Node> {
         IsSigned = 1,
         RequireInitialization = 1,
         ReadCost = 1,
-        AddCost = 1,
-        MulCost = 1,
+        AddCost = 3,
+        MulCost = 3,
     };
 }; 
 }

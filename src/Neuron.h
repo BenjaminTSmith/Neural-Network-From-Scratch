@@ -1,19 +1,17 @@
 #ifndef NEURON_H
 #define NEURON_H
 
-#include "Node.h"
 #include "eigen3/Eigen/Eigen"
+
+namespace nn {
 
 typedef Eigen::VectorXd ColVector;
 typedef Eigen::RowVectorXd RowVector;
 typedef Eigen::MatrixXd Matrix;
 
-namespace nn {
-
 class Neuron {
 public:
     Matrix out_;
-    Eigen::MatrixX<Node> test;
     ColVector weights_;
     ColVector weight_grads_;
     double bias_;

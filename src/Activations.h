@@ -1,7 +1,6 @@
 #ifndef ACTIVATION_H
 #define ACTIVATION_H
 
-#include <algorithm>
 #include "eigen3/Eigen/Eigen"
 
 typedef Eigen::VectorXd ColVector;
