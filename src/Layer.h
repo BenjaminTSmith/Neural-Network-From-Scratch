@@ -39,7 +39,7 @@ public:
     Matrix ForwardPass(const Matrix& inputs) {
         out_ = Matrix(neurons_.size(), inputs.rows());
         for (int i = 0; i < neurons_.size(); ++i) { 
-            out_.row(i) = neurons_[i].ForwardPass(inputs); 
+            out_.row(i) = neurons_[i].Activate(inputs); 
         }
         return out_;
     }

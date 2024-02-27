@@ -11,8 +11,20 @@ static Matrix ReLU(const Matrix& input) {
     return input.cwiseMax(0);
 }
 
-static double LeakyReLU(const double num) {
-    return num > 0 ? num : 0.1 * num;
+static Matrix d_ReLU(const Matrix& input) {
+    return input.unaryExpr([](double num) { return num > 0 ? 1 : 0; })
+        .cast<double>();
+}
+
+static Matrix LeakyReLU(const Matrix& input) {
+    return input.unaryExpr([](double num) {
+        return num > 0 ? num : 0.1 * num; 
+    }).cast<double>();
+}
+
+static Matrix d_LeakyReLU(const Matrix& input) {
+    return input.unaryExpr([](double num) { return num > 0 ? 1 : 0.1; })
+        .cast<double>();
 }
 
 static ColVector SoftMax(const ColVector& input) {

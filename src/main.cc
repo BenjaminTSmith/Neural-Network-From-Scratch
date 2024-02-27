@@ -4,12 +4,14 @@
 
 int main() {
 
-    nn::Layer test(3, 3);
+    nn::Neuron test(3);
     Matrix matrix;
-    matrix.resize(9, 3);
+    matrix.resize(3, 3);
     matrix.setRandom();
-    test.ForwardPass(matrix);
-    std::cout << test.out_ << std::endl;
+    test.Activate(matrix);
+    std::vector<nn::Neuron> empty_array;
+
+    test.ComputeWeightGradients(matrix, empty_array, 1);
 
     return 0;
 }
