@@ -1,7 +1,9 @@
 #ifndef NEURON_H
 #define NEURON_H
 
+#include <functional>
 #include "eigen3/Eigen/Eigen"
+#include "Activations.h"
 
 namespace nn {
 
@@ -11,15 +13,18 @@ typedef Eigen::MatrixXd Matrix;
 
 class Neuron {
 public:
+    Matrix activated_out_;
     Matrix out_;
+
     ColVector weights_;
-    ColVector weight_grads_;
     double bias_;
-    double bias_grad_;
+
     double learning_rate_ = 1;
+    std::function<Matrix(Matrix)> activation_function_;
 
     Neuron(int size) : weights_(size), bias_(0) {
         weights_.setRandom();
+        activation_function_ = ReLU;
     }
 
     Neuron() {}
@@ -29,14 +34,15 @@ public:
     Matrix ForwardPass(const Matrix& inputs) {
         out_ = (inputs * weights_).array() + bias_;
         out_.transposeInPlace();
-        return out_;
+        activated_out_ = activation_function_(out_);
+        return activated_out_;
     }
 
-    void BackProp(const Matrix& inputs, Matrix& input_grads, double delta) {
-        bias_grad_ = delta * learning_rate_;
-        weight_grads_ = inputs.colwise().mean() * delta;
-        input_grads += weights_.transpose() * delta;
+    void ComputeInputGradients(const Matrix& inputs, double delta) {
+        bias_ -= delta * learning_rate_;
+        weights_ -= inputs.colwise().mean() * delta * learning_rate_;
     }
+
 };
 
 }

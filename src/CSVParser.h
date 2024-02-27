@@ -43,8 +43,8 @@ static std::vector<Image> ParseCSV(std::string filepath) {
         parsed_line.erase(parsed_line.begin());
         parsed_CSV.push_back({label, parsed_line});
     }
-    for (auto& image: parsed_CSV) {
-        for (auto& data: image.data) {
+    for (auto& image : parsed_CSV) {
+        for (auto& data : image.data) {
             data /= 255;
         }
         image.one_hot_label = OneHotEncode(image.label, 10);

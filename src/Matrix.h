@@ -13,7 +13,7 @@ static std::vector<double> OneHotEncode(int num, int size) {
 }
 
 static void Clip(std::vector<double>& input, double min, double max) {
-    for (auto& in: input) {
+    for (auto& in : input) {
         in = in < min ? min : in;
         in = in > max ? max : in;
     }

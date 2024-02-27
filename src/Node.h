@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "eigen3/Eigen/Eigen"
+#include "eigen3/Eigen/Core"
 
 namespace nn {
 
@@ -11,30 +11,71 @@ struct Node {
     double delta = 0;
 
     Node(double value) : value(value) {}
+    Node() {}
 
     Node operator+(const Node& other) const { return { value + other.value }; }
-    Node operator+(const double other) const { return { value + other }; }
+
+    template<typename T>
+    Node operator+(const T other) const { return { value + other }; }
 
     Node operator-(const Node& other) const { return { value - other.value }; }
-    Node operator-(const double other) const { return { value - other }; }
+
+    template<typename T>
+    Node operator-(const T other) const { return { value - other }; }
 
     Node operator*(const Node& other) const { return { value * other.value }; }
-    Node operator*(const double other) const { return { value * other }; }
+
+    template<typename T>
+    Node operator*(const T other) const { return { value * other }; }
 
     Node operator/(const Node& other) const { return { value / other.value }; }
-    Node operator/(const double other) const { return { value / other }; }
 
-    void operator+=(const Node& other) { value += other.value; }
-    void operator+=(const double other) { value += other; }
+    template<typename T>
+    Node operator/(const T other) const { return { value / other }; }
 
-    void operator-=(const Node& other) { value -= other.value; }
-    void operator-=(const double other) { value -= other; }
+    Node& operator+=(const Node& other) {
+        value += other.value; 
+        return *this;
+    }
 
-    void operator*=(const Node& other) { value *= other.value; }
-    void operator*=(const double other) { value *= other; }
+    template<typename T>
+    Node& operator+=(const T other) {
+        value += other; 
+        return *this;
+    }
 
-    void operator/=(const Node& other) { value /= other.value; }
-    void operator/=(const double other) { value /= other; }
+    Node& operator-=(const Node& other) {
+        value -= other.value; 
+        return *this;
+    }
+
+    template<typename T>
+    Node& operator-=(const T other) {
+        value -= other; 
+        return *this;
+    }
+
+    Node& operator*=(const Node& other) {
+        value *= other.value; 
+        return *this;
+    }
+
+    template<typename T>
+    Node& operator*=(const T other) {
+        value *= other; 
+        return *this;
+    }
+
+    Node& operator/=(const Node& other) {
+        value /= other.value; 
+        return *this;
+    }
+
+    template<typename T>
+    Node& operator/=(const T other) {
+        value /= other; 
+        return *this;
+    }
 
 
     bool operator>(const double other) const { return value > other; }
@@ -47,7 +88,7 @@ struct Node {
 }
 
 namespace Eigen {
-template<> struct NumTraits<nn::Node> {
+template<> struct NumTraits<nn::Node>: NumTraits<double> {
     typedef nn::Node Real;
     typedef nn::Node NonInteger;
     typedef nn::Node Nested;
@@ -62,6 +103,17 @@ template<> struct NumTraits<nn::Node> {
         MulCost = 3,
     };
 }; 
+
+template<typename BinaryOp>
+struct ScalarBinaryOpTraits<nn::Node, double, BinaryOp> {
+    typedef nn::Node ReturnType;
+};
+
+template<typename BinaryOp>
+struct ScalarBinaryOpTraits<double, nn::Node, BinaryOp> {
+    typedef nn::Node ReturnType;
+};
+
 }
 
 #endif // !NODE_H

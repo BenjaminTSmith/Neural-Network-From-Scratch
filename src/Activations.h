@@ -4,9 +4,11 @@
 #include "eigen3/Eigen/Eigen"
 
 typedef Eigen::VectorXd ColVector;
+typedef Eigen::RowVectorXd RowVector;
+typedef Eigen::MatrixXd Matrix;
 
-static double ReLU(const double num) {
-    return std::max(0.0, num);
+static Matrix ReLU(const Matrix& input) {
+    return input.cwiseMax(0);
 }
 
 static double LeakyReLU(const double num) {
