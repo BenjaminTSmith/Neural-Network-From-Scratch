@@ -1,38 +1,57 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <random>
+#include "eigen3/Eigen/Eigen"
+
+namespace nn {
 
 struct Node {
 
-    double value_ = 0;
-    double grad_ = 0;
+    double value = 0;
+    double delta = 0;
 
-    Node(double value) : value_(value) {}
+    Node(double value) : value(value) {}
 
-    Node() {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_real_distribution<double> dis(-1.0, 1.0);
+    Node operator+(const Node& other) const { return {value + other.value}; }
+    Node operator+(const double other) const { return {value + other}; }
 
-        value_ = dis(gen);
-    }
-    
-    Node operator+(const Node& other) const { return {value_ + other.value_}; }
-    Node operator+(const double other) const { return {value_ + other}; }
+    Node operator-(const Node& other) const { return {value - other.value}; }
+    Node operator-(const double other) const { return {value - other}; }
 
-    Node operator-(const Node& other) const { return {value_ - other.value_}; }
-    Node operator-(const double other) const { return {value_ - other}; }
+    Node operator*(const Node& other) const { return {value * other.value}; }
+    Node operator*(const double other) const { return {value * other}; }
 
-    Node operator*(const Node& other) const { return {value_ * other.value_}; }
-    Node operator*(const double other) const { return {value_ * other}; }
+    Node operator/(const Node& other) const { return {value / other.value}; }
+    Node operator/(const double other) const { return {value / other}; }
 
-    bool operator>(const double other) const { return value_ > other; }
-    bool operator<(const double other) const { return value_ < other; }
+    bool operator>(const double other) const { return value > other; }
+    bool operator<(const double other) const { return value < other; }
 
-    void operator+=(const Node& other) { value_ += other.value_; }
-    void operator+=(const double other) { value_ += other; }
+    void operator+=(const Node& other) { value += other.value; }
+    void operator+=(const double other) { value += other; }
+
+    void operator()() { value -= delta; }
 
 };
+
+}
+
+namespace Eigen {
+template<> struct NumTraits<nn::Node> {
+    typedef nn::Node Real;
+    typedef nn::Node NonInteger;
+    typedef nn::Node Nested;
+
+    enum {
+        IsComplex = 0,
+        IsInteger = 0,
+        IsSigned = 1,
+        RequireInitialization = 1,
+        ReadCost = 1,
+        AddCost = 1,
+        MulCost = 1,
+    };
+}; 
+}
 
 #endif // !NODE_H

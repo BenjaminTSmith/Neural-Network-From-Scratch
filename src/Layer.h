@@ -10,10 +10,12 @@ class Layer {
 public:
     std::vector<nn::Neuron> neurons_;
     Matrix out_;
+    ColVector deltas_;
 
     Layer(int size, int nins) {
         neurons_.resize(size);
         for (auto& neuron: neurons_) neuron = nn::Neuron(nins);
+        deltas_ = Matrix::Zero(size, 1);
     }
 
     Layer(int size) {
@@ -49,7 +51,9 @@ public:
     }
 
     void BackProp(Matrix& inputs, Matrix& input_grads) {
-        for (auto& neuron: neurons_) { neuron.BackProp(inputs, input_grads); }
+        for (size_t i = 0; i < neurons_.size(); ++i) { 
+            neurons_[i].BackProp(inputs, input_grads, deltas_[i]); 
+        }
     }
 
     void BackProp(Layer& prev_layer) {
