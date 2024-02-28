@@ -1,5 +1,4 @@
 #include <iostream>
-#include "Activations.h"
 #include "Layer.h"
 
 int main() {
@@ -11,7 +10,7 @@ int main() {
     test.Activate(matrix);
     std::vector<nn::Neuron> empty_array;
 
-    test.ComputeWeightGradients(matrix, empty_array, 1);
+    test.ComputeGradients(matrix, empty_array);
 
     return 0;
 }

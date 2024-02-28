@@ -1,6 +1,7 @@
 #ifndef LAYER_H
 #define LAYER_H
 
+#include "Activations.h"
 #include "Neuron.h"
 #include <iostream>
 
@@ -9,7 +10,12 @@ namespace nn {
 class Layer {
 public:
     std::vector<nn::Neuron> neurons_;
+
     Matrix out_;
+    Matrix activated_out_;
+
+    std::function<Matrix(Matrix)> activation_function_ = Identity;
+    std::function<Matrix(Matrix)> activation_derivative_ = d_Identity;
 
     Layer(int size, int nins) {
         neurons_.resize(size);
@@ -41,15 +47,19 @@ public:
         for (int i = 0; i < neurons_.size(); ++i) { 
             out_.row(i) = neurons_[i].Activate(inputs); 
         }
-        return out_;
+        activated_out_ = activation_function_(out_);
+        return activated_out_;
     }
 
-    void ForwardPass(Layer& prev_layer) {
-        ForwardPass(prev_layer.out_);
+    Matrix ForwardPass(Layer& prev_layer) {
+        return ForwardPass(prev_layer.out_);
     }
 
     void BackProp(Layer& prev_layer) {
-
+        for (auto& neuron: neurons_) {
+            neuron.ComputeGradients(prev_layer.activated_out_,
+                                    prev_layer.neurons_);
+        }
     }
 
 };

@@ -7,6 +7,14 @@ typedef Eigen::VectorXd ColVector;
 typedef Eigen::RowVectorXd RowVector;
 typedef Eigen::MatrixXd Matrix;
 
+static Matrix Identity(const Matrix& input) {
+    return input;
+}
+
+static Matrix d_Identity(const Matrix& input) {
+    return Matrix::Ones(input.rows(), input.cols());
+}
+
 static Matrix ReLU(const Matrix& input) {
     return input.cwiseMax(0);
 }

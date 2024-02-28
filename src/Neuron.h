@@ -19,13 +19,11 @@ public:
 
     double learning_rate_ = 1;
 
-    std::function<Matrix(Matrix)> activation_function_;
-    std::function<Matrix(Matrix)> activation_derivative_;
+    std::function<Matrix(Matrix)> activation_function_ = Identity;
+    std::function<Matrix(Matrix)> activation_derivative_ = d_Identity;
 
     Neuron(int size) : weights_(size), bias_(0) {
         weights_.setRandom();
-        activation_function_ = ReLU;
-        activation_derivative_ = d_ReLU;
     }
 
     Neuron() {}
@@ -41,19 +39,16 @@ public:
         return activated_out_;
     }
 
-    void ComputeWeightGradients(const Matrix& inputs,
-                                std::vector<Neuron>& prev_neurons,
-                                double delta) 
+    void ComputeGradients(const Matrix& inputs, 
+                                std::vector<Neuron>& prev_neurons) 
     {
-        out_ = activation_derivative_(out_) * delta;
+        out_ = activation_derivative_(out_) * activated_out_;
         bias_ -= learning_rate_ * out_.rowwise().mean()[0];
         weights_.array() -= inputs.colwise().mean().array() *
-            out_.colwise().mean().array() * learning_rate_;
-        std::cout << out_.colwise().mean().array() << std::endl;
-        // not sure if this is right yet
+            out_.array() * learning_rate_;
         for (auto& neuron : prev_neurons) {
             neuron.activated_out_.array() += weights_.array()
-                * out_.colwise().mean().array();
+                * out_.array();
         }
     }
 
