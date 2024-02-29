@@ -34,6 +34,13 @@ public:
         for (auto& neuron : neurons_) { neuron.set_learning_rate(lr); }
     }
 
+    void SetDeltaOne() {
+        for (auto& neuron : neurons_) {
+            neuron.activated_out_ = Matrix::Ones(neuron.activated_out_.rows(),
+                                                 neuron.activated_out_.cols());
+        }
+    }
+
     void PrintOutput() {
         for (const auto& neuron : neurons_) {
             std::cout << neuron.out_ << std::endl;

@@ -35,8 +35,4 @@ static Matrix d_LeakyReLU(const Matrix& input) {
         .cast<double>();
 }
 
-static ColVector SoftMax(const ColVector& input) {
-    return ColVector(4);
-}
-
 #endif // !ACTIVATION_H

@@ -3,14 +3,10 @@
 
 int main() {
 
-    nn::Neuron test(3);
-    Matrix matrix;
-    matrix.resize(3, 3);
-    matrix.setRandom();
-    test.Activate(matrix);
-    std::vector<nn::Neuron> empty_array;
-
-    test.ComputeGradients(matrix, empty_array);
+    nn::Neuron neuron(3);
+    Eigen::MatrixXd input(2, 3);
+    input << 5, 4, 3, 2, 1, 0;
+    std::cout << input << std::endl;
 
     return 0;
 }
