@@ -35,4 +35,8 @@ static Matrix d_LeakyReLU(const Matrix& input) {
         .cast<double>();
 }
 
+static Matrix MSE(const Matrix& input, const Matrix& ground_truth) {
+    return (ground_truth.array() - input.array()).cwiseAbs2();
+}
+
 #endif // !ACTIVATION_H

@@ -34,7 +34,14 @@ public:
         for (auto& neuron : neurons_) { neuron.set_learning_rate(lr); }
     }
 
-    void SetDeltaOne() {
+    void SetZero() {
+        for (auto& neuron : neurons_) {
+            neuron.activated_out_ = Matrix::Zero(neuron.activated_out_.rows(),
+                                                 neuron.activated_out_.cols());
+        }
+    }
+
+    void SetOne() {
         for (auto& neuron : neurons_) {
             neuron.activated_out_ = Matrix::Ones(neuron.activated_out_.rows(),
                                                  neuron.activated_out_.cols());
@@ -42,13 +49,12 @@ public:
     }
 
     void PrintOutput() {
-        for (const auto& neuron : neurons_) {
-            std::cout << neuron.out_ << std::endl;
-        }
+        std::cout << activated_out_ << std::endl;
     }
 
     // Matrix rows are inputs. Matrix cols need to match nins
     // to layer and to neurons.
+    // each output needs to be a column now
     Matrix ForwardPass(const Matrix& inputs) {
         out_ = Matrix(neurons_.size(), inputs.rows());
         for (int i = 0; i < neurons_.size(); ++i) { 
@@ -59,7 +65,13 @@ public:
     }
 
     Matrix ForwardPass(Layer& prev_layer) {
-        return ForwardPass(prev_layer.out_);
+        return ForwardPass(prev_layer.activated_out_);
+    }
+
+    void BackProp(const Matrix& inputs) {
+        for (auto& neuron: neurons_) {
+            neuron.ComputeGradients(inputs);
+        }
     }
 
     void BackProp(Layer& prev_layer) {

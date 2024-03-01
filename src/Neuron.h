@@ -39,18 +39,23 @@ public:
     }
 
     void ComputeGradients(const Matrix& inputs, 
-                                std::vector<Neuron>& prev_neurons) 
-    {
+                                std::vector<Neuron>& prev_neurons) {
         out_ = activation_derivative_(out_).array() * activated_out_.array();
         bias_ -= learning_rate_ * out_.mean();
-        // std::cout << "Input mean: " << inputs.colwise().mean() << std::endl << std::endl;
-        // std::cout << "Out mean: " << out_.mean() << std::endl << std::endl;
-        weights_.array() -= inputs.colwise().mean().array() *
-            out_.mean() * learning_rate_;
         for (auto& neuron : prev_neurons) {
             neuron.activated_out_.array() += weights_.array()
                 * out_.array();
         }
+        weights_.array() -= inputs.colwise().mean().array() *
+            out_.mean() * learning_rate_;
+    }
+
+    void ComputeGradients(const Matrix& inputs) 
+    {
+        out_ = activation_derivative_(out_).array() * activated_out_.array();
+        bias_ -= learning_rate_ * out_.mean();
+        weights_.array() -= inputs.colwise().mean().array() *
+            out_.mean() * learning_rate_;
     }
 
 };
