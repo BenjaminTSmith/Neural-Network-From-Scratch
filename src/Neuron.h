@@ -33,7 +33,7 @@ public:
     // to layer and to neurons.
     Matrix Activate(const Matrix& inputs) {
         out_ = (inputs * weights_).array() + bias_;
-        out_.transposeInPlace();
+        // each output needs to be a column now
         activated_out_ = activation_function_(out_);
         return activated_out_;
     }

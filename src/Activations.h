@@ -39,4 +39,8 @@ static Matrix MSE(const Matrix& input, const Matrix& ground_truth) {
     return (ground_truth.array() - input.array()).cwiseAbs2();
 }
 
+static Matrix d_MSE(const Matrix& input, const Matrix& ground_truth) {
+    return 2 * -input.array();
+}
+
 #endif // !ACTIVATION_H

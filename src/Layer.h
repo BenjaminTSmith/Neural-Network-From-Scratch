@@ -16,6 +16,8 @@ public:
 
     std::function<Matrix(Matrix)> activation_function_ = Identity;
     std::function<Matrix(Matrix)> activation_derivative_ = d_Identity;
+    std::function<Matrix(Matrix, Matrix)> loss_function_;
+    std::function<Matrix(Matrix, Matrix)> loss_derivative_;
 
     Layer(int size, int nins) {
         neurons_.resize(size);
@@ -34,16 +36,9 @@ public:
         for (auto& neuron : neurons_) { neuron.set_learning_rate(lr); }
     }
 
-    void SetZero() {
+    void ZeroGrad() {
         for (auto& neuron : neurons_) {
             neuron.activated_out_ = Matrix::Zero(neuron.activated_out_.rows(),
-                                                 neuron.activated_out_.cols());
-        }
-    }
-
-    void SetOne() {
-        for (auto& neuron : neurons_) {
-            neuron.activated_out_ = Matrix::Ones(neuron.activated_out_.rows(),
                                                  neuron.activated_out_.cols());
         }
     }
@@ -56,9 +51,9 @@ public:
     // to layer and to neurons.
     // each output needs to be a column now
     Matrix ForwardPass(const Matrix& inputs) {
-        out_ = Matrix(neurons_.size(), inputs.rows());
+        out_ = Matrix(inputs.rows(), neurons_.size());
         for (int i = 0; i < neurons_.size(); ++i) { 
-            out_.row(i) = neurons_[i].Activate(inputs); 
+            out_.col(i) = neurons_[i].Activate(inputs); 
         }
         activated_out_ = activation_function_(out_);
         return activated_out_;
