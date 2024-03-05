@@ -1,11 +1,10 @@
 #include <iostream>
-#include "Activations.h"
 #include "Layer.h"
 
 int main() {
 
-    Eigen::MatrixXd input(3, 3);
-    input << 1, 2, 3, 4, 5, 6, 7, 8, 9;
+    Eigen::MatrixXd input(1, 3);
+    input << 7, 8, 9;
     std::cout << input << std::endl;
     Eigen::MatrixXd ground_truth(1, 3);
     ground_truth << 3, -2, -1;

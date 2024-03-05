@@ -1,9 +1,9 @@
 #ifndef LAYER_H
 #define LAYER_H
 
-#include "Activations.h"
 #include "Neuron.h"
 #include <iostream>
+#include <functional>
 
 namespace nn {
 
@@ -12,12 +12,8 @@ public:
     std::vector<nn::Neuron> neurons_;
 
     Matrix out_;
-    Matrix activated_out_;
 
-    std::function<Matrix(Matrix)> activation_function_ = Identity;
-    std::function<Matrix(Matrix)> activation_derivative_ = d_Identity;
-    std::function<Matrix(Matrix, Matrix)> loss_function_;
-    std::function<Matrix(Matrix, Matrix)> loss_derivative_;
+    std::function<Matrix(Matrix)> activation_function_;
 
     Layer(int size, int nins) {
         neurons_.resize(size);
@@ -38,29 +34,27 @@ public:
 
     void ZeroGrad() {
         for (auto& neuron : neurons_) {
-            neuron.activated_out_ = Matrix::Zero(neuron.activated_out_.rows(),
-                                                 neuron.activated_out_.cols());
+            neuron.out_ = Matrix::Zero(neuron.out_.rows(), neuron.out_.cols());
         }
     }
 
     void PrintOutput() {
-        std::cout << activated_out_ << std::endl;
+        std::cout << out_ << std::endl;
     }
 
     // Matrix rows are inputs. Matrix cols need to match nins
     // to layer and to neurons.
-    // each output needs to be a column now
     Matrix ForwardPass(const Matrix& inputs) {
         out_ = Matrix(inputs.rows(), neurons_.size());
         for (int i = 0; i < neurons_.size(); ++i) { 
             out_.col(i) = neurons_[i].Activate(inputs); 
         }
-        activated_out_ = activation_function_(out_);
-        return activated_out_;
+        out_ = activation_function_(out_);
+        return out_;
     }
 
     Matrix ForwardPass(Layer& prev_layer) {
-        return ForwardPass(prev_layer.activated_out_);
+        return ForwardPass(prev_layer.out_);
     }
 
     void BackProp(const Matrix& inputs) {
@@ -70,8 +64,10 @@ public:
     }
 
     void BackProp(Layer& prev_layer) {
+        prev_layer.ZeroGrad();
         for (auto& neuron: neurons_) {
-            neuron.ComputeGradients(prev_layer.activated_out_,
+            neuron.out_
+            neuron.ComputeGradients(prev_layer.out_,
                                     prev_layer.neurons_);
         }
     }

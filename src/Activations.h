@@ -2,13 +2,14 @@
 #define ACTIVATION_H
 
 #include "eigen3/Eigen/Eigen"
+#include "Layer.h"
 
 typedef Eigen::VectorXd ColVector;
 typedef Eigen::RowVectorXd RowVector;
 typedef Eigen::MatrixXd Matrix;
 
-static Matrix Identity(const Matrix& input) {
-    return input;
+static void Identity(const nn::Layer& layer) {
+
 }
 
 static Matrix d_Identity(const Matrix& input) {
