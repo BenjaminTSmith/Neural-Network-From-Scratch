@@ -34,7 +34,8 @@ public:
 
     void ZeroGrad() {
         for (auto& neuron : neurons_) {
-            neuron.out_ = Matrix::Zero(neuron.out_.rows(), neuron.out_.cols());
+            // to do.
+            neuron.out_.delta_.fill(0);
         }
     }
 
@@ -66,7 +67,6 @@ public:
     void BackProp(Layer& prev_layer) {
         prev_layer.ZeroGrad();
         for (auto& neuron: neurons_) {
-            neuron.out_
             neuron.ComputeGradients(prev_layer.out_,
                                     prev_layer.neurons_);
         }

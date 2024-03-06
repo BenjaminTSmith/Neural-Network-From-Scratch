@@ -1,117 +1,96 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "eigen3/Eigen/Core"
+#include "eigen3/Eigen/Eigen"
 
 namespace nn {
 
-struct Node {
+class Node {
+public:
+    Eigen::MatrixXd value_;
+    Eigen::MatrixXd delta_;
 
-    double value = 0;
-    double delta = 0;
-
-    Node(double value) : value(value) {}
+    Node(const Eigen::MatrixXd value) : value_(value) {}
+    Node(const Eigen::MatrixXd value, const Eigen::MatrixXd delta)
+        : value_(value), delta_(delta) {}
+    Node(int rows, int cols) : value_(rows, cols), delta_(rows, cols) {}
     Node() {}
 
-    Node operator+(const Node& other) const { return { value + other.value }; }
+    Node(const Node& copy) 
+        : value_(copy.value_),
+          delta_(copy.delta_) {}
 
-    template<typename T>
-    Node operator+(const T other) const { return { value + other }; }
+    void ZeroGrad() {
+        delta_ = Eigen::MatrixXd::Zero(delta_.rows(), delta_.cols()); 
+        delta_.fill(0);
+    }
 
-    Node operator-(const Node& other) const { return { value - other.value }; }
+    double mean() { return value_.mean(); }
 
-    template<typename T>
-    Node operator-(const T other) const { return { value - other }; }
+    Node operator+(const Node& other) const { 
+        return { value_ + other.value_ }; 
+    }
 
-    Node operator*(const Node& other) const { return { value * other.value }; }
+    Node operator+(const double other) const {
+        return { value_.array() + other }; 
+    }
 
-    template<typename T>
-    Node operator*(const T other) const { return { value * other }; }
+    Node operator-(const Node& other) const {
+        return { value_ - other.value_ }; 
+    }
 
-    Node operator/(const Node& other) const { return { value / other.value }; }
+    Node operator-(const double other) const {
+        return { value_.array() - other }; 
+    }
 
-    template<typename T>
-    Node operator/(const T other) const { return { value / other }; }
+    Node operator*(const Node& other) const {
+        return { value_ * other.value_ }; 
+    }
+
+    Node operator*(const double other) const { return { value_ * other }; }
 
     Node& operator+=(const Node& other) {
-        value += other.value; 
+        value_ += other.value_; 
         return *this;
     }
 
-    template<typename T>
-    Node& operator+=(const T other) {
-        value += other; 
+    Node& operator+=(const double other) {
+        value_.array() += other; 
         return *this;
     }
 
     Node& operator-=(const Node& other) {
-        value -= other.value; 
+        value_ -= other.value_; 
         return *this;
     }
 
-    template<typename T>
-    Node& operator-=(const T other) {
-        value -= other; 
+    Node& operator-=(const double other) {
+        value_.array() -= other; 
         return *this;
     }
 
     Node& operator*=(const Node& other) {
-        value *= other.value; 
+        value_ *= other.value_; 
         return *this;
     }
 
-    template<typename T>
-    Node& operator*=(const T other) {
-        value *= other; 
+    Node& operator*=(const double other) {
+        value_ *= other; 
         return *this;
     }
 
     Node& operator/=(const Node& other) {
-        value /= other.value; 
+        value_.array() /= other.value_.array(); 
         return *this;
     }
 
-    template<typename T>
-    Node& operator/=(const T other) {
-        value /= other; 
+    Node& operator/=(const double other) {
+        value_ /= other; 
         return *this;
     }
 
+    void operator()() { value_ -= delta_; }
 
-    bool operator>(const double other) const { return value > other; }
-    bool operator<(const double other) const { return value < other; }
-
-    void operator()() { value -= delta; }
-
-};
-
-}
-
-namespace Eigen {
-template<> struct NumTraits<nn::Node>: NumTraits<double> {
-    typedef nn::Node Real;
-    typedef nn::Node NonInteger;
-    typedef nn::Node Nested;
-
-    enum {
-        IsComplex = 0,
-        IsInteger = 0,
-        IsSigned = 1,
-        RequireInitialization = 1,
-        ReadCost = 1,
-        AddCost = 3,
-        MulCost = 3,
-    };
-}; 
-
-template<typename BinaryOp>
-struct ScalarBinaryOpTraits<nn::Node, double, BinaryOp> {
-    typedef nn::Node ReturnType;
-};
-
-template<typename BinaryOp>
-struct ScalarBinaryOpTraits<double, nn::Node, BinaryOp> {
-    typedef nn::Node ReturnType;
 };
 
 }
