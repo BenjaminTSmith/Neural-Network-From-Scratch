@@ -20,12 +20,13 @@ public:
     Neuron(int nins) : weights_(nins) {}
 
     Node ForwardPass(const std::vector<Node>& input) {
-        if (weights_.size() != input.size()) {
+        if (weights_.size() != input.size()) 
             std::cerr << "input.size() != weights_.size()" << std::endl;
-        }
-        for (int i = 0; i < input.size(); i++) {
+        
+        for (int i = 0; i < input.size(); i++) 
             out_ += weights_[i] * input[i];
-        }
+        
+
         out_ += bias_;
         return out_;
     }
@@ -33,6 +34,8 @@ public:
     void BackProp() {
         out_.ComputeGradients();
     }
+
+    operator Node() const { return out_; }
 
 };
 

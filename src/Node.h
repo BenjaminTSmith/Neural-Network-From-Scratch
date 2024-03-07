@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <memory>
+#include <iostream>
 #include "eigen3/Eigen/Eigen"
 
 namespace nn {
@@ -17,10 +18,10 @@ public:
     double value_ = 0;
     double grad_ = 0;
     Operation op_;
-    std::vector<std::shared_ptr<Node>> children_;
+    std::vector<Node*> children_;
 
     Node(double value, Operation op,
-         std::vector<std::shared_ptr<Node>> children)
+         std::vector<Node*> children)
         : value_(value),
           op_(op),
           children_(children) {}
@@ -38,22 +39,20 @@ public:
         return *this;
     }
 
-    Node operator+(const Node& other) const {
-        std::vector<std::shared_ptr<Node>> children;
-        children.push_back(std::make_shared<Node>(other));
-        children.push_back(std::make_shared<Node>(*this));
-        return { other.value_ + value_, Operation::add, children };
+    Node operator+(Node& other) {
+        return *std::make_shared<Node>(Node(other.value_ + value_,
+                                            Operation::add,
+                                            { &other, this }));
     }
 
     void operator+=(const Node& other) {
         *this =  *this + other ;
     }
 
-    Node operator*(const Node& other) const {
-        std::vector<std::shared_ptr<Node>> children;
-        children.push_back(std::make_shared<Node>(other));
-        children.push_back(std::make_shared<Node>(*this));
-        return { other.value_ * value_, Operation::multiply, children };
+    Node operator*(Node& other) {
+        return *std::make_shared<Node>(Node(other.value_ * value_,
+                                            Operation::multiply,
+                                            { &other, this }));
     }
 
     void operator*=(const Node& other) {
@@ -61,9 +60,7 @@ public:
     }
 
     void ReLU() {
-        std::vector<std::shared_ptr<Node>> child;
-        child.push_back(std::make_shared<Node>(*this));
-        *this = { value_ > 0 ? value_ : 0, Operation::ReLU, child };
+        *this = { value_ > 0 ? value_ : 0, Operation::ReLU, { this }};
     }
 
     bool operator==(const Node& other) const {
@@ -84,8 +81,8 @@ public:
                 }
                 break;
             case Operation::multiply:
-                children_[0]->grad_ += children_[1]->grad_ * grad_;
-                children_[1]->grad_ += children_[0]->grad_ * grad_;
+                children_[0]->grad_ += children_[1]->value_ * grad_;
+                children_[1]->grad_ += children_[0]->value_ * grad_;
                 break;
             case Operation::ReLU:
                 children_[0]->grad_ += (value_ > 0 ? 1 : 0) * grad_;
