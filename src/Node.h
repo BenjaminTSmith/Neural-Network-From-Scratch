@@ -5,6 +5,8 @@
 #include <iostream>
 #include "eigen3/Eigen/Eigen"
 
+using std::shared_ptr;
+
 namespace nn {
 
 enum class Operation {
@@ -26,41 +28,50 @@ public:
           op_(op),
           children_(children) {}
     Node(double value) : value_(value) {}
-    Node() {
-        SetRandom();
-    }
+    Node() { SetRandom(); }
     Node(Node &&) = default;
-    Node(const Node &) = default;
-    Node &operator=(Node &&) = default;
-    Node &operator=(const Node &) = default;
-
-    Node& operator=(const double value) {
+    Node(const Node& other)
+        : value_(other.value_),
+          grad_(other.grad_),
+          op_(other.op_),
+          children_(other.children_) {}
+    Node& operator=(Node &&) = default;
+    Node& operator=(double value) {
         value_ = value;
         return *this;
     }
-
-    Node operator+(Node& other) {
-        return *std::make_shared<Node>(Node(other.value_ + value_,
-                                            Operation::add,
-                                            { &other, this }));
+    Node& operator=(const Node& other) {
+        value_ = other.value_;
+        grad_ = other.grad_;
+        children_ = other.children_;
+        return *this;
     }
 
-    void operator+=(const Node& other) {
-        *this =  *this + other ;
+    Node& operator+(Node& other) {
+        return *new Node(other.value_ + value_,
+                         Operation::add,
+                         { &other, this });
     }
 
-    Node operator*(Node& other) {
-        return *std::make_shared<Node>(Node(other.value_ * value_,
-                                            Operation::multiply,
-                                            { &other, this }));
+    void operator+=(Node& other) {
+        *this =  *new Node(*this) + other;
     }
 
-    void operator*=(const Node& other) {
-        *this = *this * other;
+    Node& operator*(Node& other) {
+        return *new Node(other.value_ + value_,
+                         Operation::add,
+                         { &other, this });
     }
 
-    void ReLU() {
-        *this = { value_ > 0 ? value_ : 0, Operation::ReLU, { this }};
+    void operator*=(Node& other) {
+        *this = *new Node(*this) * other;
+    }
+
+    Node ReLU() {
+         /*return *std::make_shared<Node>(Node(value_ > 0 ? value_ : 0,
+                                            Operation::ReLU,
+                                            { this }));*/
+        return 1;
     }
 
     bool operator==(const Node& other) const {

@@ -5,16 +5,22 @@ using namespace nn;
 
 int main() {
 
-    Neuron test(3);
+    Node one(1);
+    Node ten(10);
+    Node four(4);
+    Node three(3);
 
-    std::vector<Node> inputs = {7, 2, -3};
+    ten += three;
+    for (auto& child : ten.children_)
+        child->grad_ = 10;
 
-    test.ForwardPass(inputs);
-    test.out_.grad_ = 1;
-    test.BackProp();
-    for (auto& child : test.out_.children_)
-        std::cout << child->grad_ << std::endl;
-    std::cout << test.bias_.grad_ << std::endl;
+    std::cout << ten.value_ << std::endl;
+
+    std::cout << ten.children_.size() << std::endl;
+    std::cout << ten.children_[0]->grad_ << std::endl;
+    std::cout << ten.children_[1]->grad_ << std::endl;
+    std::cout << ten.grad_ << std::endl;
+    std::cout << three.grad_ << std::endl;
 
     return 0;
 }
