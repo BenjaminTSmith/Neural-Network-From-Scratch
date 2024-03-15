@@ -1,19 +1,22 @@
 #include <iostream>
-#include "Neuron.h"
+#include "Value.h"
 
 using namespace dag;
 
 int main() {
 
-    Node ten;
-    ten.grad_ = 1;
+    Graph graph;
+    Value two(2);
+    Value three(3);
+    Value seven(7);
 
-    ten.ComputeGradients();
+    two.SetGraph(graph);
+    three.SetGraph(graph);
+    seven.SetGraph(graph);
 
-    std::cout << ten.children_.size() << std::endl;
-    std::cout << ten.children_[0]->grad_ << std::endl;
-    std::cout << ten.children_[1]->grad_ << std::endl;
-    std::cout << ten.grad_ << std::endl;
+    Value twelve = two + three + seven;
 
+    graph.PrintGraph();
+    
     return 0;
 }

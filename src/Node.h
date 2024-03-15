@@ -59,17 +59,16 @@ public:
         children_ = other.children_;
         return *this;
     }
-    ~Node() { for (auto& child : children_) delete child; }
 
-    Node& operator+(Node& other) {
-        return *new Node(other.value_ + value_,
-                         Op::ADD,
-                         { &other, this });
+    Node operator+(Node& other) {
+        return Node(other.value_ + value_,
+                    Op::ADD,
+                    { &other, this });
     }
 
     template <typename T>
-    Node& operator+(T other) {
-        return *new Node(value_ + other, Op::ADD,
+    Node operator+(T other) {
+        return Node(value_ + other, Op::ADD,
                          { this, new Node(other) });
     }
 
@@ -78,7 +77,10 @@ public:
         return *this;
     }
 
-    Node& operator*(Node& other) {
+    Node operator*(Node& other) {
+        return Node(other.value_ * value_,
+                    Op::ADD,
+                    { &other, this });
         return *new Node(other.value_ + value_,
                          Op::ADD,
                          { &other, this });
@@ -126,6 +128,7 @@ public:
                 children_[0]->grad_ += (value_ > 0 ? 1 : 0) * grad_;
                 break;
             default:
+                break;
         }
     }
 

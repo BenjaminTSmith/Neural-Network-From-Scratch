@@ -2,7 +2,9 @@
 #include "Layer.h"
 
 // simple backprop of one input
+/*
 void NeuronTest1() {
+
     Matrix matrix(1, 3);
     matrix.setRandom();
     std::cout << "Input values: " << matrix << std::endl << std::endl;
@@ -20,10 +22,11 @@ void LayerTest1() {
     nn::Layer layer(3, 2);
     Matrix input(1, 2);
 }
+*/
 
 int main() {
 
-    NeuronTest1();
+ // NeuronTest1();
 
     return 0;
 }
