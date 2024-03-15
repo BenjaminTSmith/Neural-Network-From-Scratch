@@ -3,15 +3,18 @@
 
 #include <memory>
 #include <iostream>
-#include "eigen3/Eigen/Eigen"
+#include <vector>
+// #include "eigen3/Eigen/Eigen"
 
 using std::shared_ptr;
 
-namespace nn {
+namespace dag {
 
-enum class Operation {
-    add,
-    multiply,
+enum class Op {
+    ADD,
+    MULTIPLY,
+    SUBTRACT,
+    DIVIDE,
     ReLU
 };
 
@@ -19,17 +22,27 @@ class Node {
 public:
     double value_ = 0;
     double grad_ = 0;
-    Operation op_;
+    
+    Op op_;
     std::vector<Node*> children_;
 
-    Node(double value, Operation op,
+    Node(double value, double grad, std::vector<Node*> children)
+        : value_(value),
+          grad_(grad),
+          children_(children) {}
+
+    Node(double value, Op op,
          std::vector<Node*> children)
         : value_(value),
           op_(op),
           children_(children) {}
+
     Node(double value) : value_(value) {}
+    
     Node() { SetRandom(); }
+
     Node(Node &&) = default;
+
     Node(const Node& other)
         : value_(other.value_),
           grad_(other.grad_),
@@ -46,32 +59,46 @@ public:
         children_ = other.children_;
         return *this;
     }
+    ~Node() { for (auto& child : children_) delete child; }
 
     Node& operator+(Node& other) {
         return *new Node(other.value_ + value_,
-                         Operation::add,
+                         Op::ADD,
                          { &other, this });
     }
 
-    void operator+=(Node& other) {
+    template <typename T>
+    Node& operator+(T other) {
+        return *new Node(value_ + other, Op::ADD,
+                         { this, new Node(other) });
+    }
+
+    Node& operator+=(Node& other) {
         *this =  *new Node(*this) + other;
+        return *this;
     }
 
     Node& operator*(Node& other) {
         return *new Node(other.value_ + value_,
-                         Operation::add,
+                         Op::ADD,
                          { &other, this });
     }
 
-    void operator*=(Node& other) {
-        *this = *new Node(*this) * other;
+    template <typename T>
+    Node& operator*(T other) {
+        return *new Node(value_ * other, Op::MULTIPLY,
+                         { this, new Node(other) });
     }
 
-    Node ReLU() {
-         /*return *std::make_shared<Node>(Node(value_ > 0 ? value_ : 0,
-                                            Operation::ReLU,
-                                            { this }));*/
-        return 1;
+    Node& operator*=(Node& other) {
+        *this = *new Node(*this) * other;
+        return *this;
+    }
+
+    Node& ReLU() {
+        return *new Node(std::max(0.0, this->value_),
+                         Op::ReLU,
+                         { this });
     }
 
     bool operator==(const Node& other) const {
@@ -86,18 +113,19 @@ public:
 
     void ComputeGradients() {
         switch (op_) {
-            case Operation::add: 
+            case Op::ADD: 
                 for (auto& child : children_) {
                     child->grad_ += grad_;
                 }
                 break;
-            case Operation::multiply:
+            case Op::MULTIPLY:
                 children_[0]->grad_ += children_[1]->value_ * grad_;
                 children_[1]->grad_ += children_[0]->value_ * grad_;
                 break;
-            case Operation::ReLU:
+            case Op::ReLU:
                 children_[0]->grad_ += (value_ > 0 ? 1 : 0) * grad_;
                 break;
+            default:
         }
     }
 
@@ -115,7 +143,7 @@ public:
 
 }
 
-namespace Eigen {
+/*namespace Eigen {
 
 template<> struct NumTraits<nn::Node>
     : NumTraits<double> {
@@ -133,6 +161,6 @@ template<> struct NumTraits<nn::Node>
     };
 };
 
-}
+}*/
 
 #endif // !NODE_H

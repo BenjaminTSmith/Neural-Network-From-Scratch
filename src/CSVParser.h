@@ -4,9 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <tuple>
 #include <iostream>
-#include "Matrix.h"
 
 struct Image {
     int label = 0;
@@ -47,7 +45,7 @@ static std::vector<Image> ParseCSV(std::string filepath) {
         for (auto& data : image.data) {
             data /= 255;
         }
-        image.one_hot_label = OneHotEncode(image.label, 10);
+        //image.one_hot_label = OneHotEncode(image.label, 10);
     }
 
     file.close();
