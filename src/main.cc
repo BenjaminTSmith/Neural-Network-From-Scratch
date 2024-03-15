@@ -9,12 +9,18 @@ int main() {
     Value two(2);
     Value three(3);
     Value seven(7);
+    Value thirteen(13);
+    Value nine(9);
 
     two.SetGraph(graph);
     three.SetGraph(graph);
     seven.SetGraph(graph);
+    thirteen.SetGraph(graph);
+    nine.SetGraph(graph);
 
-    Value twelve = two + three + seven;
+    auto twelve = two + three + seven;
+    auto twentyfive = thirteen + twelve;
+    auto seventyfive = three * twentyfive;
 
     graph.PrintGraph();
     

@@ -17,6 +17,8 @@ public:
         self_ = new Node(value, 0, child_nodes);
     }
 
+    // Value(double value, )
+
     void SetGraph(Graph& graph) {
         graph_ = &graph; 
         graph_->AddNode(self_);
@@ -24,10 +26,15 @@ public:
 
     Value operator+(const Value& other) {
         Value ret(other.value_ + value_, {self_, other.self_});
-        std::cout << "here 1" << std::endl;
+        ret.graph_ = graph_;
         ret.self_ = graph_->AddNode(*other.self_ + *self_);
-        std::cout << "here 2" << std::endl;
-
+        return ret;
+    }
+    
+    Value operator*(const Value& other) {
+        Value ret(other.value_ * value_, {self_, other.self_});
+        ret.graph_ = graph_;
+        ret.self_ = graph_->AddNode(*other.self_ * *self_);
         return ret;
     }
 

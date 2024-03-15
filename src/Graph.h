@@ -13,17 +13,11 @@ public:
 
     Graph(size_t size) : nodes_(size) {}
 
-    Graph& operator=(const Graph& other) {
-        nodes_ = other.nodes_;
-        return *this;
-    }
+    Graph& operator=(const Graph& other) = default;
 
     // returns pointer to added node
     Node* AddNode(const Node& node) {
-        std::cout << "this one" << std::endl;
-        std::cout << nodes_.size() << std::endl;
         nodes_.push_back(std::move(node));
-        std::cout << "no this one" << std::endl;
         return &nodes_.back();
     }
 
@@ -49,8 +43,9 @@ public:
     void resize(size_t size) { nodes_.resize(size); }
 
     void PrintGraph() {
-        for (const auto& node : nodes_)
-            std::cout << node.value_ << std::endl << '|' << std::endl;
+        for (int i = 0; i < nodes_.size() - 1; ++i)
+            std::cout << nodes_[i].value_ << std::endl << '|' << std::endl;
+        std::cout << nodes_[nodes_.size() - 1] << std::endl;
     }
 
 };
