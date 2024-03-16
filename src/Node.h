@@ -8,7 +8,7 @@
 
 using std::shared_ptr;
 
-namespace dag {
+namespace DAG {
 
 enum class Op {
     ADD,
@@ -69,17 +69,6 @@ public:
                     { &other, this });
     }
 
-    template <typename T>
-    Node operator+(T other) {
-        return Node(value_ + other, Op::ADD,
-                         { this, new Node(other) });
-    }
-
-    Node& operator+=(Node& other) {
-        *this =  *new Node(*this) + other;
-        return *this;
-    }
-
     Node operator*(Node& other) {
         return Node(other.value_ * value_,
                     Op::ADD,
@@ -87,17 +76,6 @@ public:
         return *new Node(other.value_ + value_,
                          Op::ADD,
                          { &other, this });
-    }
-
-    template <typename T>
-    Node& operator*(T other) {
-        return *new Node(value_ * other, Op::MULTIPLY,
-                         { this, new Node(other) });
-    }
-
-    Node& operator*=(Node& other) {
-        *this = *new Node(*this) * other;
-        return *this;
     }
 
     Node& ReLU() {

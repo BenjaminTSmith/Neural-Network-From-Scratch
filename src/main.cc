@@ -1,11 +1,12 @@
 #include <iostream>
 #include "Value.h"
 
-using namespace dag;
+using namespace DAG;
 
 int main() {
 
     Graph graph;
+
     Value nineteen(19, graph);
     Value two(2, graph);
     Value three(3, graph);
@@ -16,9 +17,15 @@ int main() {
     auto fourtynine = three + seven + thirteen * three;
     auto fiftyone = fourtynine + two;
 
+    fiftyone.node_->grad_ = 1;
+    graph.BackProp();
+    std::cout << three.node_->grad_ << std::endl;
+
     graph.PrintGraph();
 
-    *graph[graph.size() - 1] = Node(3);
+    for (auto& node : graph.nodes())
+        node->value_ -= node->grad_;
+
     graph.PrintGraph();
 
     return 0;

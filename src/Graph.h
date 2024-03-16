@@ -3,7 +3,7 @@
 
 #include "Node.h"
 
-namespace dag {
+namespace DAG {
 
 class Graph {
 public:
@@ -31,11 +31,11 @@ public:
 
     void BackProp() {
         // TODO
-        /*TopologicalSort();
-        nodes_[nodes_.size()].grad_ = 1;
+        TopologicalSort();
+        nodes_[nodes_.size() - 1]->grad_ = 1;
         for (int i = nodes_.size() - 1; i >= 0; --i) {
-            nodes_[i].ComputeGradients();
-        }*/
+            nodes_[i]->ComputeGradients();
+        }
     }
 
     std::vector<Node*>& nodes() { return nodes_; }
