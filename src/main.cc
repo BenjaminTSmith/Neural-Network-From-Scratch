@@ -6,23 +6,20 @@ using namespace dag;
 int main() {
 
     Graph graph;
-    Value two(2);
-    Value three(3);
-    Value seven(7);
-    Value thirteen(13);
-    Value nine(9);
+    Value nineteen(19, graph);
+    Value two(2, graph);
+    Value three(3, graph);
+    Value seven(7, graph);
+    Value thirteen(13, graph);
+    Value nine(9, graph);
 
-    two.SetGraph(graph);
-    three.SetGraph(graph);
-    seven.SetGraph(graph);
-    thirteen.SetGraph(graph);
-    nine.SetGraph(graph);
-
-    auto twelve = two + three + seven;
-    auto twentyfive = thirteen + twelve;
-    auto seventyfive = three * twentyfive;
+    auto fourtynine = three + seven + thirteen * three;
+    auto fiftyone = fourtynine + two;
 
     graph.PrintGraph();
-    
+
+    *graph[graph.size() - 1] = Node(3);
+    graph.PrintGraph();
+
     return 0;
 }

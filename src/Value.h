@@ -17,7 +17,10 @@ public:
         self_ = new Node(value, 0, child_nodes);
     }
 
-    // Value(double value, )
+    Value(const double value, Graph& graph) : value_(value), graph_(&graph) {
+        self_ = new Node(value);
+        graph_->AddNode(self_);
+    }
 
     void SetGraph(Graph& graph) {
         graph_ = &graph; 
@@ -27,14 +30,14 @@ public:
     Value operator+(const Value& other) {
         Value ret(other.value_ + value_, {self_, other.self_});
         ret.graph_ = graph_;
-        ret.self_ = graph_->AddNode(*other.self_ + *self_);
+        ret.self_ = graph_->AddNode(new Node(*other.self_ + *self_));
         return ret;
     }
     
     Value operator*(const Value& other) {
         Value ret(other.value_ * value_, {self_, other.self_});
         ret.graph_ = graph_;
-        ret.self_ = graph_->AddNode(*other.self_ * *self_);
+        ret.self_ = graph_->AddNode(new Node(*other.self_ * *self_));
         return ret;
     }
 

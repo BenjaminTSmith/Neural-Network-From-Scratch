@@ -20,8 +20,11 @@ enum class Op {
 
 class Node {
 public:
+    static int count;
+
     double value_ = 0;
     double grad_ = 0;
+    int id = 0;
     
     Op op_;
     std::vector<Node*> children_;
