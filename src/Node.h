@@ -1,12 +1,9 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <memory>
 #include <iostream>
 #include <vector>
 // #include "eigen3/Eigen/Eigen"
-
-using std::shared_ptr;
 
 namespace DAG {
 
@@ -18,8 +15,7 @@ enum class Op {
     ReLU
 };
 
-class Node {
-public:
+struct Node {
     static int count;
 
     double value_ = 0;
@@ -51,11 +47,14 @@ public:
           grad_(other.grad_),
           op_(other.op_),
           children_(other.children_) {}
+
     Node& operator=(Node &&) = default;
+
     Node& operator=(double value) {
         value_ = value;
         return *this;
     }
+
     Node& operator=(const Node& other) {
         value_ = other.value_;
         grad_ = other.grad_;
@@ -71,14 +70,23 @@ public:
 
     Node operator*(Node& other) {
         return Node(other.value_ * value_,
-                    Op::ADD,
+                    Op::MULTIPLY,
                     { &other, this });
-        return *new Node(other.value_ + value_,
-                         Op::ADD,
-                         { &other, this });
     }
 
-    Node& ReLU() {
+    Node operator/(Node& other) {
+        return Node(value_ / other.value_,
+                    Op::DIVIDE,
+                    { this, &other });
+    }
+
+    Node operator-(Node& other) {
+        return Node(value_ - other.value_,
+                    Op::SUBTRACT,
+                    { this, &other });
+    }
+
+    Node ReLU() {
         return *new Node(std::max(0.0, this->value_),
                          Op::ReLU,
                          { this });

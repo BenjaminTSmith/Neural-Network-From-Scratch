@@ -5,11 +5,7 @@
 
 namespace DAG {
 
-class Graph {
-public:
-    std::vector<Node*> nodes_;
-    // std::unordered_map<int, Node> nodes_;
-    
+struct Graph {
     Graph() {}
 
     Graph(size_t size) : nodes_(size) {}
@@ -51,11 +47,15 @@ public:
     Node*& operator[](size_t idx) { return nodes_[idx]; }
 
     void PrintGraph() {
-        for (int i = 0; i < nodes_.size() - 1; ++i)
-            std::cout << nodes_[i]->value_ << std::endl << '|' << std::endl;
-        std::cout << nodes_[nodes_.size() - 1]->value_ << std::endl;
+        if (size() != 0) {
+            for (int i = 0; i < size() - 1; ++i)
+                std::cout << nodes_[i]->value_ << std::endl << '|' << std::endl;
+            std::cout << nodes_[size() - 1]->value_ << std::endl << std::endl;
+        }
     }
 
+private:
+    std::vector<Node*> nodes_;
 };
 
 }
