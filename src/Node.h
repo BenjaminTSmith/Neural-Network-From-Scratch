@@ -16,14 +16,14 @@ enum class Op {
 };
 
 struct Node {
-    static int count;
 
     double value_ = 0;
     double grad_ = 0;
-    int id = 0;
     
     Op op_;
     std::vector<Node*> children_;
+
+    Node() {}
 
     Node(double value, double grad, std::vector<Node*> children)
         : value_(value),
@@ -38,8 +38,6 @@ struct Node {
 
     Node(double value) : value_(value) {}
     
-    Node() { SetRandom(); }
-
     Node(Node &&) = default;
 
     Node(const Node& other)
@@ -90,14 +88,6 @@ struct Node {
         return *new Node(std::max(0.0, this->value_),
                          Op::ReLU,
                          { this });
-    }
-
-    bool operator==(const Node& other) const {
-        return value_ == other.value_;
-    }
-
-    void SetRandom() {
-        value_ = static_cast<double>(rand()) / RAND_MAX * 2.0 - 1.0;
     }
 
     operator double() const { return value_; }

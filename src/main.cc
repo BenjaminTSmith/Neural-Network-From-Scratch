@@ -5,24 +5,25 @@ using namespace DAG;
 int main() {
     Graph graph;
 
-    Value two(2, graph);
-    Value three(3, graph);
-    Value seven(7, graph);
-    Value nine(9, graph);
-    Value thirteen(13, graph);
-    Value negative_nine(-9, graph);
+    Value rand1(graph);
+    Value rand2(graph);
+    Value five(5, graph);
 
-    auto one = three - two;
-    auto sixteen = seven + nine;
-    auto sixtythree = seven * nine;
-    auto zero = negative_nine.ReLU();
-    auto pos_seven = seven.ReLU();
+    rand1.SetRandom();
+    rand2.SetRandom();
 
+    auto rand3 = rand1 + rand2;
+    auto rand4 = five * rand3;
+    
     graph.PrintGraph();
 
     graph.clear();
 
-    sixteen = two * three;
+    rand1.SetRandom();
+    rand2.SetRandom();
+
+    rand4 = rand1 / rand2;
+
     graph.PrintGraph();
 
     return 0;

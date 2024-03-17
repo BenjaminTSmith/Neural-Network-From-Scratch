@@ -12,21 +12,21 @@ struct Value {
     
     Value() {}
 
-    Value(double value) : value_(value) { node_ = new Node(value); }
+    Value(double value) : value_(value), node_(new Node(value)) {}
 
-    Value(double value, std::vector<Node*> child_nodes) : value_(value) {
-        node_ = new Node(value, 0, child_nodes);
-    }
+    Value(Graph& graph) : graph_(&graph), node_(new Node) {}
 
     Value(const double value, Graph& graph) : value_(value), graph_(&graph) {
         node_ = new Node(value);
     }
 
+    Value(double value, std::vector<Node*> child_nodes) : value_(value) {}
+
     void SetGraph(Graph& graph) {
         graph_ = &graph; 
     }
 
-    Value operator+(const Value& other) {
+    Value operator+(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         Value ret(other.value_ + value_, {node_, other.node_});
@@ -35,7 +35,7 @@ struct Value {
         return ret;
     }
     
-    Value operator*(const Value& other) {
+    Value operator*(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         Value ret(other.value_ * value_, {node_, other.node_});
@@ -44,7 +44,7 @@ struct Value {
         return ret;
     }
 
-    Value operator/(const Value& other) {
+    Value operator/(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         Value ret(value_ / other.value_, {node_, other.node_});
@@ -53,7 +53,7 @@ struct Value {
         return ret;
     }
 
-    Value operator-(const Value& other) {
+    Value operator-(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         Value ret(value_ - other.value_, {node_, other.node_});
@@ -62,7 +62,7 @@ struct Value {
         return ret;
     }
 
-    Value ReLU() {
+    Value ReLU() const {
         graph_->AddNode(node_);
         Value ret(std::max(0.0, value_), { node_ });
         ret.graph_ = graph_;
