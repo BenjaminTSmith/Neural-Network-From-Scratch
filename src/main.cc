@@ -14,7 +14,8 @@ int main() {
 
     auto rand3 = rand1 + rand2;
     auto rand4 = five * rand3;
-    
+
+    graph.TrimGraph();
     graph.PrintGraph();
 
     graph.clear();
@@ -24,6 +25,7 @@ int main() {
 
     rand4 = rand1 / rand2;
 
+    graph.TrimGraph();
     graph.PrintGraph();
 
     return 0;

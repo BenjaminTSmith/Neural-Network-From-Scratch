@@ -1,6 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <stack>
+#include <set>
 #include "Node.h"
 
 namespace DAG {
@@ -17,12 +19,15 @@ struct Graph {
         return nodes_.back();
     }
 
-    void EmplaceNode(double value, double grad, std::vector<Node*> children) {
-        // nodes_.emplace_back(value, grad, children);
-    }
-
     void TopologicalSort() {
         // TODO
+        std::stack<Node> stack;
+    }
+
+    void TrimGraph() {
+        // currently just removes duplicates with a set
+        std::set<Node*> temp(nodes_.begin(), nodes_.end());
+        nodes_.assign(temp.begin(), temp.end());
     }
 
     void BackProp() {
