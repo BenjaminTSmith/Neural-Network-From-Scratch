@@ -16,7 +16,7 @@ struct Value {
 
     Value(Graph& graph) : graph_(&graph), node_(new Node) {}
 
-    Value(const double value, Graph& graph) : value_(value), graph_(&graph) {
+    Value(double value, Graph& graph) : value_(value), graph_(&graph) {
         node_ = new Node(value);
     }
 
@@ -34,6 +34,14 @@ struct Value {
         ret.node_ = graph_->AddNode(new Node(*other.node_ + *node_));
         return ret;
     }
+
+    Value& operator+=(const Value& other) {
+        graph_->AddNode(node_);
+        graph_->AddNode(other.node_);
+        value_ += other.value_;
+        node_ = graph_->AddNode(new Node(*other.node_ + *node_));
+        return *this;
+    }
     
     Value operator*(const Value& other) const {
         graph_->AddNode(node_);
@@ -42,6 +50,14 @@ struct Value {
         ret.graph_ = graph_;
         ret.node_ = graph_->AddNode(new Node(*other.node_ * *node_));
         return ret;
+    }
+
+    Value& operator*=(const Value& other) {
+        graph_->AddNode(node_);
+        graph_->AddNode(other.node_);
+        value_ *= other.value_;
+        node_ = graph_->AddNode(new Node(*other.node_ * *node_));
+        return *this;
     }
 
     Value operator/(const Value& other) const {
@@ -53,6 +69,14 @@ struct Value {
         return ret;
     }
 
+    Value& operator/=(const Value& other) {
+        graph_->AddNode(node_);
+        graph_->AddNode(other.node_);
+        value_ /= other.value_;
+        node_ = graph_->AddNode(new Node(*node_ / *other.node_));
+        return *this;
+    }
+
     Value operator-(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
@@ -61,6 +85,8 @@ struct Value {
         ret.node_ = graph_->AddNode(new Node(*node_ - *other.node_));
         return ret;
     }
+
+    // add operator-=()
 
     Value ReLU() const {
         graph_->AddNode(node_);

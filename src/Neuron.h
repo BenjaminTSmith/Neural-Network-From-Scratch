@@ -12,6 +12,7 @@ class Neuron {
 public:
     std::vector<Value> weights_;
     Value bias_; 
+    Value out_;
 
     Neuron() {}
 

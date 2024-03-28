@@ -5,28 +5,27 @@ using namespace DAG;
 int main() {
     Graph graph;
 
-    Value rand1(graph);
-    Value rand2(graph);
-    Value five(5, graph);
+    Value x1(2.0, graph);
+    Value x2(0.0, graph);
 
-    rand1.SetRandom();
-    rand2.SetRandom();
+    Value w1(-3.0, graph);
+    Value w2(1.0, graph);
 
-    auto rand3 = rand1 + rand2;
-    auto rand4 = five * rand3;
+    Value b(6.8813735870195432, graph);
 
+    Value x1w1 = x1 * w1;
+    Value x2w2 = x2 * w2;
+    Value x1w1x2w2 = x1w1 + x2w2;
+    Value n = x1w1x2w2 + b;
+    
     graph.TopologicalSort();
+    graph.BackProp();
+
     graph.PrintGraph();
 
-    graph.clear();
-
-    rand1.SetRandom();
-    rand2.SetRandom();
-
-    rand4 = rand1 / rand2;
-
-    graph.TopologicalSort();
-    graph.PrintGraph();
+    for (const auto& node : graph.nodes()) {
+        std::cout << node->value_ << " : " << node->grad_ << std::endl;
+    }
 
     return 0;
 }

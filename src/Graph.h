@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <iostream>
 #include <set>
 #include <unordered_set>
 #include "Node.h"
@@ -40,16 +41,16 @@ struct Graph {
 
     void TrimGraph() {
         // currently just removes duplicates with a set
+        // might be unnecessary due to TopologicalSort()
         std::set<Node*> temp(nodes_.begin(), nodes_.end());
         nodes_.assign(temp.begin(), temp.end());
     }
 
     void BackProp() {
-        // TODO
-        nodes_[nodes_.size() - 1]->grad_ = 1;
-        for (int i = nodes_.size() - 1; i >= 0; --i) {
-            nodes_[i]->ComputeGradients();
-        }
+        // change this later to 1.0. just a test for backprop right now
+        nodes_[0]->grad_ = 0.5;
+        for (const auto& node_ : nodes_)
+            node_->ComputeGradients();
     }
 
     std::vector<Node*>& nodes() { return nodes_; }

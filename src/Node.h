@@ -1,7 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <iostream>
 #include <vector>
 // #include "eigen3/Eigen/Eigen"
 
@@ -92,7 +91,7 @@ struct Node {
 
     operator double() const { return value_; }
 
-    void ComputeGradients() {
+    void ComputeGradients() const {
         switch (op_) {
             case Op::ADD: 
                 for (auto& child : children_) {
