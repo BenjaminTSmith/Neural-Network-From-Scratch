@@ -1,8 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <stack>
 #include <set>
+#include <unordered_set>
 #include "Node.h"
 
 namespace DAG {
@@ -20,8 +20,22 @@ struct Graph {
     }
 
     void TopologicalSort() {
-        // TODO
-        std::stack<Node> stack;
+        std::vector<Node*> nodes;
+        std::unordered_set<Node*> visited;
+        Topo(nodes_[nodes_.size() - 1], nodes, visited);
+        nodes_ = nodes;
+        std::reverse(nodes_.begin(), nodes_.end());
+    }
+
+    void Topo(Node* node,
+              std::vector<Node*>& nodes,
+              std::unordered_set<Node*>& visited) {
+        if (!visited.contains(node)) {
+            visited.emplace(node);
+            for (auto& child_ : node->children_)  
+                Topo(child_, nodes, visited); 
+            nodes.push_back(node);            
+        }
     }
 
     void TrimGraph() {
@@ -32,7 +46,6 @@ struct Graph {
 
     void BackProp() {
         // TODO
-        TopologicalSort();
         nodes_[nodes_.size() - 1]->grad_ = 1;
         for (int i = nodes_.size() - 1; i >= 0; --i) {
             nodes_[i]->ComputeGradients();

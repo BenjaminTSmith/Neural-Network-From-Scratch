@@ -75,7 +75,7 @@ struct Value {
         node_->value_ = value_;
     }
         
-    explicit operator double() { return value_; }
+    explicit operator double() const { return value_; }
 
 };
 
