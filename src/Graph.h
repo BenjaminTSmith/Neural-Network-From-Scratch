@@ -13,9 +13,13 @@ struct Graph {
 
     Graph(size_t size) : nodes_(size) {}
 
+    ~Graph() { for (auto& node_ : nodes_) delete node_; }
+
     Graph& operator=(const Graph& other) = default;
 
     Node* AddNode(Node* node) {
+        if (node == nullptr)
+            return nullptr;
         nodes_.push_back(node);
         return nodes_.back();
     }
@@ -47,8 +51,7 @@ struct Graph {
     }
 
     void BackProp() {
-        // change this later to 1.0. just a test for backprop right now
-        nodes_[0]->grad_ = 0.5;
+        nodes_[0]->grad_ = 1;
         for (const auto& node_ : nodes_)
             node_->ComputeGradients();
     }
@@ -68,8 +71,10 @@ struct Graph {
     void PrintGraph() {
         if (size() != 0) {
             for (int i = 0; i < size() - 1; ++i)
-                std::cout << nodes_[i]->value_ << std::endl << '|' << std::endl;
-            std::cout << nodes_[size() - 1]->value_ << std::endl << std::endl;
+                std::cout << nodes_[i]->value_ << " : " << nodes_[i]->grad_
+                    << std::endl << "  |" << std::endl;
+            std::cout << nodes_[size() - 1]->value_ << " : "
+                << nodes_[size() - 1]->grad_ << std::endl << std::endl;
         }
     }
 

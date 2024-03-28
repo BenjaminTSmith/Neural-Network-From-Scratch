@@ -3,7 +3,7 @@
 using namespace DAG;
 
 int main() {
-    Graph graph;
+    /*Graph graph;
 
     Value x1(2.0, graph);
     Value x2(0.0, graph);
@@ -16,7 +16,9 @@ int main() {
     Value x1w1 = x1 * w1;
     Value x2w2 = x2 * w2;
     Value x1w1x2w2 = x1w1 + x2w2;
+    x1w1x2w2 *= 1;
     Value n = x1w1x2w2 + b;
+    Value o = n.ReLU();
     
     graph.TopologicalSort();
     graph.BackProp();
@@ -25,7 +27,15 @@ int main() {
 
     for (const auto& node : graph.nodes()) {
         std::cout << node->value_ << " : " << node->grad_ << std::endl;
-    }
+    }*/
+
+    Graph graph;
+
+    Value a(3, graph);
+
+    graph.TopologicalSort();
+    graph.BackProp();
+    graph.PrintGraph();
 
     return 0;
 }

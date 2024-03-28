@@ -14,17 +14,14 @@ struct Value {
 
     Value(double value) : value_(value), node_(new Node(value)) {}
 
-    Value(Graph& graph) : graph_(&graph), node_(new Node) {}
-
-    Value(double value, Graph& graph) : value_(value), graph_(&graph) {
-        node_ = new Node(value);
-    }
+    Value(double value, Graph& graph) 
+        : value_(value),
+          graph_(&graph),
+          node_(new Node(value)) {}
 
     Value(double value, std::vector<Node*> child_nodes) : value_(value) {}
 
-    void SetGraph(Graph& graph) {
-        graph_ = &graph; 
-    }
+    void SetGraph(Graph& graph) { graph_ = &graph; }
 
     Value operator+(const Value& other) const {
         graph_->AddNode(node_);
@@ -86,7 +83,13 @@ struct Value {
         return ret;
     }
 
-    // add operator-=()
+    Value& operator-=(const Value& other) {
+        graph_->AddNode(node_);
+        graph_->AddNode(other.node_);
+        value_ -= other.value_;
+        node_ = graph_->AddNode(new Node(*node_ - *other.node_));
+        return *this;
+    }
 
     Value ReLU() const {
         graph_->AddNode(node_);
