@@ -12,7 +12,8 @@ enum class Op {
     MULTIPLY,
     SUBTRACT,
     DIVIDE,
-    ReLU
+    RELU,
+    NONE
 };
 
 struct Node {
@@ -21,22 +22,22 @@ struct Node {
     double grad_ = 0;
     
     Op op_;
-    std::vector<std::shared_ptr<Node>> children_;
+    std::vector<Node*> children_;
 
     Node() {}
 
-    Node(double value, double grad, std::vector<std::shared_ptr<Node>> children)
+    Node(double value, double grad, std::vector<Node*> children)
         : value_(value),
           grad_(grad),
           children_(children) {}
 
     Node(double value, Op op,
-         std::vector<std::shared_ptr<Node>> children)
+         std::vector<Node*> children)
         : value_(value),
           op_(op),
           children_(children) {}
 
-    Node(double value) : value_(value) {}
+    Node(double value) : value_(value), op_(Op::NONE) {}
     
     Node(Node &&) = default;
 
@@ -61,45 +62,45 @@ struct Node {
     }
 
     Node operator+(Node& other) {
-        return { value_ + other.value_, Op::ADD, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
+        return { other.value_ + value_, Op::ADD, { &other, this }};
     }
 
     Node operator*(Node& other) {
-        return { value_ * other.value_, Op::MULTIPLY, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
+        return { other.value_ * value_, Op::MULTIPLY, { &other, this }};
     }
 
     Node operator/(Node& other) {
-        return { value_ / other.value_, Op::DIVIDE, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
+        return { value_ / other.value_, Op::DIVIDE, { this, &other } };
     }
 
     Node operator-(Node& other) {
-        return { value_ - other.value_, Op::SUBTRACT, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
+        return { value_ - other.value_, Op::SUBTRACT, { this, &other } };
     }
 
     Node ReLU() {
-        return {std::max(0.0, this->value_),
-                         Op::ReLU,
-                         { std::shared_ptr<Node>(this) }};
+        return { std::max(0.0, this->value_), Op::RELU, { this } };
     }
 
-    explicit operator double() const { return value_; }
+    operator double() const { return value_; }
 
     void ComputeGradients() const {
-        switch (op_) {
-            case Op::ADD: 
-                for (auto& child : children_) {
-                    child->grad_ += grad_;
-                }
-                break;
-            case Op::MULTIPLY:
-                children_[0]->grad_ += children_[1]->value_ * grad_;
-                children_[1]->grad_ += children_[0]->value_ * grad_;
-                break;
-            case Op::ReLU:
-                children_[0]->grad_ += (value_ > 0 ? 1 : 0) * grad_;
-                break;
-            default:
-                break;
+        if (children_.size() > 0) {
+            switch (op_) {
+                case Op::ADD: 
+                    for (auto& child : children_) {
+                        child->grad_ += grad_;
+                    }
+                    break;
+                case Op::MULTIPLY:
+                    children_[0]->grad_ += children_[1]->value_ * grad_;
+                    children_[1]->grad_ += children_[0]->value_ * grad_;
+                    break;
+                case Op::RELU:
+                    children_[0]->grad_ += (value_ > 0 ? 1 : 0) * grad_;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

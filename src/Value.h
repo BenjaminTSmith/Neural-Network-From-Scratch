@@ -7,7 +7,7 @@ namespace DAG {
 
 struct Value {
     Graph* graph_ = nullptr;
-    std::shared_ptr<Node> node_ = nullptr;
+    Node* node_ = nullptr;
     double value_ = 0;
     
     Value() {}
@@ -19,18 +19,16 @@ struct Value {
           graph_(&graph),
           node_(new Node(value)) {}
 
-    // Value(double value, std::vector<Node*> child_nodes) : value_(value) {}
-
-    // ~Value() { delete node_; }
+    Value(double value, std::vector<Node*> child_nodes) : value_(value) {}
 
     void SetGraph(Graph& graph) { graph_ = &graph; }
 
     Value operator+(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
-        Value ret(other.value_ + value_);
+        Value ret(other.value_ + value_, { node_, other.node_ });
         ret.graph_ = graph_;
-        ret.node_ = graph_->AddNode(std::make_shared<Node>(*node_ + *other.node_));
+        ret.node_ = graph_->AddNode(new Node(*other.node_ + *node_));
         return ret;
     }
 
@@ -38,16 +36,16 @@ struct Value {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         value_ += other.value_;
-        node_ = graph_->AddNode(std::make_shared<Node>(*node_ + *other.node_));
+        node_ = graph_->AddNode(new Node(*other.node_ + *node_));
         return *this;
     }
     
     Value operator*(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
-        Value ret(other.value_ * value_);
+        Value ret(other.value_ * value_, { node_, other.node_ });
         ret.graph_ = graph_;
-        ret.node_ = graph_->AddNode(std::make_shared<Node>(*other.node_ * *node_));
+        ret.node_ = graph_->AddNode(new Node(*other.node_ * *node_));
         return ret;
     }
 
@@ -55,16 +53,16 @@ struct Value {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         value_ *= other.value_;
-        node_ = graph_->AddNode(std::make_shared<Node>(*other.node_ * *node_));
+        node_ = graph_->AddNode(new Node(*other.node_ * *node_));
         return *this;
     }
 
     Value operator/(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
-        Value ret(value_ / other.value_);
+        Value ret(value_ / other.value_, { node_, other.node_ });
         ret.graph_ = graph_;
-        ret.node_ = graph_->AddNode(std::make_shared<Node>(*node_ / *other.node_));
+        ret.node_ = graph_->AddNode(new Node(*node_ / *other.node_));
         return ret;
     }
 
@@ -72,16 +70,16 @@ struct Value {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         value_ /= other.value_;
-        node_ = graph_->AddNode(std::make_shared<Node>(*node_ / *other.node_));
+        node_ = graph_->AddNode(new Node(*node_ / *other.node_));
         return *this;
     }
 
     Value operator-(const Value& other) const {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
-        Value ret(value_ - other.value_);
+        Value ret(value_ - other.value_, { node_, other.node_ });
         ret.graph_ = graph_;
-        ret.node_ = graph_->AddNode(std::make_shared<Node>(*node_ - *other.node_));
+        ret.node_ = graph_->AddNode(new Node(*node_ - *other.node_));
         return ret;
     }
 
@@ -89,15 +87,15 @@ struct Value {
         graph_->AddNode(node_);
         graph_->AddNode(other.node_);
         value_ -= other.value_;
-        node_ = graph_->AddNode(std::make_shared<Node>(*node_ - *other.node_));
+        node_ = graph_->AddNode(new Node(*node_ - *other.node_));
         return *this;
     }
 
     Value ReLU() const {
         graph_->AddNode(node_);
-        Value ret(std::max(0.0, value_));
+        Value ret(std::max(0.0, value_), { node_ });
         ret.graph_ = graph_;
-        ret.node_ = graph_->AddNode(std::make_shared<Node>(node_->ReLU()));
+        ret.node_ = graph_->AddNode(new Node(node_->ReLU()));
         return ret;
     }
 
