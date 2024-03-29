@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <vector>
+#include <memory>
 // #include "eigen3/Eigen/Eigen"
 
 namespace DAG {
@@ -20,17 +21,17 @@ struct Node {
     double grad_ = 0;
     
     Op op_;
-    std::vector<Node*> children_;
+    std::vector<std::shared_ptr<Node>> children_;
 
     Node() {}
 
-    Node(double value, double grad, std::vector<Node*> children)
+    Node(double value, double grad, std::vector<std::shared_ptr<Node>> children)
         : value_(value),
           grad_(grad),
           children_(children) {}
 
     Node(double value, Op op,
-         std::vector<Node*> children)
+         std::vector<std::shared_ptr<Node>> children)
         : value_(value),
           op_(op),
           children_(children) {}
@@ -60,36 +61,28 @@ struct Node {
     }
 
     Node operator+(Node& other) {
-        return Node(other.value_ + value_,
-                    Op::ADD,
-                    { &other, this });
+        return { value_ + other.value_, Op::ADD, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
     }
 
     Node operator*(Node& other) {
-        return Node(other.value_ * value_,
-                    Op::MULTIPLY,
-                    { &other, this });
+        return { value_ * other.value_, Op::MULTIPLY, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
     }
 
     Node operator/(Node& other) {
-        return Node(value_ / other.value_,
-                    Op::DIVIDE,
-                    { this, &other });
+        return { value_ / other.value_, Op::DIVIDE, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
     }
 
     Node operator-(Node& other) {
-        return Node(value_ - other.value_,
-                    Op::SUBTRACT,
-                    { this, &other });
+        return { value_ - other.value_, Op::SUBTRACT, { std::shared_ptr<Node>(this), std::shared_ptr<Node>(&other) } };
     }
 
     Node ReLU() {
-        return *new Node(std::max(0.0, this->value_),
+        return {std::max(0.0, this->value_),
                          Op::ReLU,
-                         { this });
+                         { std::shared_ptr<Node>(this) }};
     }
 
-    operator double() const { return value_; }
+    explicit operator double() const { return value_; }
 
     void ComputeGradients() const {
         switch (op_) {

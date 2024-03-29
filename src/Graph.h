@@ -13,28 +13,24 @@ struct Graph {
 
     Graph(size_t size) : nodes_(size) {}
 
-    ~Graph() { for (auto& node_ : nodes_) delete node_; }
-
     Graph& operator=(const Graph& other) = default;
 
-    Node* AddNode(Node* node) {
-        if (node == nullptr)
-            return nullptr;
+    std::shared_ptr<Node> AddNode(std::shared_ptr<Node> node) {
         nodes_.push_back(node);
         return nodes_.back();
     }
 
     void TopologicalSort() {
-        std::vector<Node*> nodes;
-        std::unordered_set<Node*> visited;
-        Topo(nodes_[nodes_.size() - 1], nodes, visited);
+        std::vector<std::shared_ptr<Node>> nodes;
+        std::unordered_set<std::shared_ptr<Node>> visited;
+        Topo(nodes_.back(), nodes, visited);
         nodes_ = nodes;
         std::reverse(nodes_.begin(), nodes_.end());
     }
 
-    void Topo(Node* node,
-              std::vector<Node*>& nodes,
-              std::unordered_set<Node*>& visited) {
+    void Topo(std::shared_ptr<Node> node,
+              std::vector<std::shared_ptr<Node>>& nodes,
+              std::unordered_set<std::shared_ptr<Node>>& visited) {
         if (!visited.contains(node)) {
             visited.emplace(node);
             for (auto& child_ : node->children_)  
@@ -56,7 +52,7 @@ struct Graph {
             node_->ComputeGradients();
     }
 
-    std::vector<Node*>& nodes() { return nodes_; }
+    std::vector<std::shared_ptr<Node>>& nodes() { return nodes_; }
 
     void clear() { nodes_.clear(); }
 
@@ -64,22 +60,22 @@ struct Graph {
 
     size_t size() { return nodes_.size(); }
 
-    Node* back() { return nodes_.back(); }
+    std::shared_ptr<Node> back() { return nodes_.back(); }
 
-    Node*& operator[](size_t idx) { return nodes_[idx]; }
+    std::shared_ptr<Node>& operator[](size_t idx) { return nodes_[idx]; }
 
     void PrintGraph() {
         if (size() != 0) {
             for (int i = 0; i < size() - 1; ++i)
                 std::cout << nodes_[i]->value_ << " : " << nodes_[i]->grad_
-                    << std::endl << "  |" << std::endl;
+                    << std::endl;
             std::cout << nodes_[size() - 1]->value_ << " : "
-                << nodes_[size() - 1]->grad_ << std::endl << std::endl;
+                << nodes_[size() - 1]->grad_ << std::endl;
         }
     }
 
 private:
-    std::vector<Node*> nodes_;
+    std::vector<std::shared_ptr<Node>> nodes_;
 };
 
 }
