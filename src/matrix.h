@@ -30,11 +30,15 @@ struct Matrix {
         if (col_count_ != other.row_count_)
             throw std::range_error("Matrices aren't the correct sizes!");
 
-        Matrix ret(col_count_, other.row_count_);
+        Matrix ret(row_count_, other.col_count_);
         std::vector<T> new_elements;
         for (size_t i = 0; i < row_count_; i++) {
             for (size_t j = 0; j < other.col_count_; j++) {
-
+                T elem = 0;
+                for (size_t k = 0; k < other.row_count_; k++) {
+                    elem += elements_[i * col_count_ + k] * other[k * other.col_count_ + j];
+                }
+                new_elements.push_back(elem);
             }
         }
 
