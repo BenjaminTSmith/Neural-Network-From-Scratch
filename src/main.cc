@@ -1,26 +1,21 @@
-#include "Value.h"
-
-using namespace DAG;
+#include <iostream>
+#include "dval.h"
+#include "matrix.h"
 
 int main() {
-    Graph graph;
 
-    Value x1(2.0, graph);
-    Value x2(0.0, graph);
+    Dval x(2.0);
+    Dval y(3.0);
+    Dval z = x * y;
+    std::cout << z << std::endl;
 
-    Value w1(-3.0, graph);
-    Value w2(1.0, graph);
+    Matrix<Dval> mat1(3, 3);
+    mat1.SetElements({1, 0, 0, 0, 1, 0, 0, 0, 1});
+    Matrix<Dval> mat2(3, 3);
+    mat2.SetElements({1, 0, 0, 0, 1, 0, 0, 0, 1});
+    auto mat3 = mat1 + mat2;
 
-    Value b(6.8813735870195432, graph);
-
-    Value x1w1x2w2 = x1 * w1 + x2 * w2;
-    Value o = x1w1x2w2 + b;
-    // Value o = n.ReLU();
-
-    graph.TopologicalSort();
-    graph.BackProp();
-
-    graph.PrintGraph();
-
+    std::cout << mat1 << std::endl << mat2 << std::endl;
+    std::cout << mat3;
     return 0;
 }
