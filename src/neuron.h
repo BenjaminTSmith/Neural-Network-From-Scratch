@@ -1,21 +1,23 @@
 #ifndef NEURON_H
 #define NEURON_H
 
-#include <vector>
-
 #include "dval.h"
 #include "matrix.h"
 
 struct Neuron {
-    std::vector<Dval> weights_;
+    Matrix<Dval> weights_;
     Dval bias_;
-    Dval out_;
+    Matrix<Dval> out_;
     
-    Neuron(int nins) : weights_(nins) {} 
-    
-    Dval ForwardPass(const std::vector<Dval>& inputs) {
+    Neuron(int nins) : weights_(nins, 1), out_(1, 1), bias_(0) {} 
 
+    Matrix<Dval> ForwardPass(const Matrix<Dval>& inputs) {
+        out_ = inputs * weights_ + bias_;
+        return out_;
     }
+
+    void BackProp(const Matrix<Dval>& inputs) {
+    } 
 
 };
 

@@ -1,15 +1,12 @@
 #include <iostream>
 #include "dval.h"
 #include "matrix.h"
+#include "neuron.h"
 
 int main() {
-    Matrix<Dval> mat1(3, 3);
-    mat1.SetElements({1, 0, 2, -1, 1, 1, 0, -2, 2});
-    Matrix<Dval> mat2(3, 3);
-    mat2.SetElements({1, 0, 2, -1, -1, 1, 0, 3, -3});
+    Neuron neuron(7);
+    Matrix<Dval> input(1, 7);
+    std::cout << neuron.ForwardPass(input) << std::endl;
 
-    std::cout << mat1 << std::endl;
-    std::cout << mat2 << std::endl;
-    std::cout << mat1 * mat2;
     return 0;
 }

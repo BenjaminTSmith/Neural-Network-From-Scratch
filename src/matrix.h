@@ -13,20 +13,27 @@ struct Matrix {
 
     Matrix(int row_count, int col_count) 
         : row_count_(row_count),
-          col_count_(col_count) {}
+          col_count_(col_count),
+          elements_(row_count * col_count) {}
 
     Matrix(const Matrix& other) = default;
 
     T operator[](size_t idx) const { return elements_[idx]; }
 
     void SetElements(const std::vector<T> elements) {
+        // elements are in row order. i.e. a matrix that looks like:
+        // 0 1 -1
+        // 1 2 -3
+        // 3 1 0
+        // would be ordered like this: { 0, 1, -1, 1, 2, -3, 3, 1, 0 }
+
         if (elements.size() != row_count_ * col_count_)
             throw std::range_error("Size of elements does not match size of matrix!");
         elements_ = elements; 
     }
 
     // dot product
-    Matrix operator*(const Matrix& other) {
+    Matrix operator*(const Matrix& other) const {
         if (col_count_ != other.row_count_)
             throw std::range_error("Matrices aren't the correct sizes!");
 
@@ -47,7 +54,7 @@ struct Matrix {
     }
 
     // coeff wise addition
-    Matrix operator+(const Matrix& other) {
+    Matrix operator+(const Matrix& other) const {
         if (other.row_count_ != row_count_ or other.col_count_ != col_count_) 
             throw std::range_error("Matrix sizes don't match!");
         
@@ -56,6 +63,25 @@ struct Matrix {
         for (size_t i = 0; i < elements_.size(); i++) 
             new_elements.push_back(elements_[i] + other.elements_[i]);
 
+        ret.SetElements(new_elements);
+        return ret;
+    }
+
+    // coeff wise scalar operations
+    Matrix operator+(const T& scalar) const {
+        std::vector<T> new_elements;
+        for (const auto& element_ : elements_) 
+            new_elements.push_back(element_ + scalar);
+        Matrix ret(row_count_, col_count_);
+        ret.SetElements(new_elements);
+        return ret;
+    }
+
+    Matrix operator*(const T& scalar) const {
+        std::vector<T> new_elements;
+        for (const auto& element_ : elements_) 
+            new_elements.push_back(element_ * scalar);
+        Matrix ret(row_count_, col_count_);
         ret.SetElements(new_elements);
         return ret;
     }
