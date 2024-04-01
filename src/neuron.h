@@ -9,7 +9,11 @@ struct Neuron {
     Dval bias_;
     Matrix<Dval> out_;
     
-    Neuron(int nins) : weights_(nins, 1), out_(1, 1), bias_(0) {} 
+    Neuron(int nins) 
+        : weights_(nins, 1),
+          bias_(0) {} 
+
+    Neuron() {}
 
     Matrix<Dval> ForwardPass(const Matrix<Dval>& inputs) {
         out_ = inputs * weights_ + bias_;

@@ -2,8 +2,8 @@
 #define MATRIX_H
 
 #include <stdexcept>
-#include <iostream>
 #include <vector>
+#include <iostream>
 
 template <typename T>
 struct Matrix {
@@ -16,11 +16,13 @@ struct Matrix {
           col_count_(col_count),
           elements_(row_count * col_count) {}
 
+    Matrix() {}
+
     Matrix(const Matrix& other) = default;
 
     T operator[](size_t idx) const { return elements_[idx]; }
 
-    void SetElements(const std::vector<T> elements) {
+    void SetElements(const std::vector<T>& elements) {
         // elements are in row order. i.e. a matrix that looks like:
         // 0 1 -1
         // 1 2 -3
@@ -86,15 +88,41 @@ struct Matrix {
         return ret;
     }
 
+    Matrix ColwiseAverage() const {
+        Matrix avg(1, col_count_);
+        std::vector<T> new_elements;
+        for (size_t i = 0; i < col_count_; i++) {
+            T sum = 0;
+            for (size_t j = 0; j < row_count_; j++) {
+                sum += elements_[j * row_count_ + i];
+            }
+            new_elements.push_back(sum / row_count_);
+        }
+        avg.SetElements(new_elements);
+        return avg;
+    }
+
+    Matrix Transpose() {
+        Matrix ret(col_count_, row_count_);
+        std::vector<T> new_elements;
+        //
+        //TODO
+        //
+        ret.SetElements(new_elements);
+        return ret;
+    }
 };
 
 template <typename T>
-std::ostream& operator<<(std::ostream& oss, const Matrix<T>& mat) {
-    for (size_t i = 0; i < mat.row_count_; i++) {
+static std::ostream& operator<<(std::ostream& oss, const Matrix<T>& mat) {
+    for (size_t i = 0; i < mat.row_count_ - 1; i++) {
         for (size_t j = 0; j < mat.col_count_; j++) {
-            std::cout << mat[i * mat.col_count_ + j] << " "; 
+            oss << mat[i * mat.col_count_ + j] << " "; 
         }
-        std::cout << std::endl;
+        oss << std::endl;
+    }
+    for (size_t j = 0; j < mat.col_count_; j++) {
+        oss << mat[(mat.row_count_ - 1) * mat.col_count_ + j] << " "; 
     }
     return oss;
 }

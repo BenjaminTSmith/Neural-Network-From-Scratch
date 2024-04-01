@@ -71,9 +71,9 @@ struct Dval {
     explicit operator double() { return value_; }
 };
 
-std::ostream& operator<<(std::ostream& os, const Dval& dval) {
-    std::cout << dval.value_;
-    return os;
+static std::ostream& operator<<(std::ostream& oss, const Dval& dval) {
+    oss << dval.value_;
+    return oss;
 }
 
 
