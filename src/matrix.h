@@ -105,9 +105,11 @@ struct Matrix {
     Matrix Transpose() {
         Matrix ret(col_count_, row_count_);
         std::vector<T> new_elements;
-        //
-        //TODO
-        //
+        for (size_t i = 0; i < col_count_; i++) {
+            for (size_t j = 0; j < row_count_; j++) {
+                new_elements.push_back(elements_[j * col_count_ + i]);
+            }
+        }
         ret.SetElements(new_elements);
         return ret;
     }

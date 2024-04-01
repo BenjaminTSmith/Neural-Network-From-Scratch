@@ -11,7 +11,11 @@ int main() {
 
     std::cout << input << std::endl;
     std::cout << neuron.weights_ << std::endl << std::endl;;
-    std::cout << neuron.out_ << std::endl;
+    std::cout << neuron.out_ << std::endl << std::endl;
+
+    Matrix<double> mat1(3, 3);
+    mat1.SetElements({ -2, 1, 4, 5, -9, 0, 2, 2, 1 });
+    std::cout << mat1 << std::endl << mat1.Transpose() << std::endl;
 
     return 0;
 }
