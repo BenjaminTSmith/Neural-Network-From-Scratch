@@ -34,18 +34,18 @@ struct Dval {
         return *this;
     }
     Dval& operator-=(const Dval& other) {
-        value_ /= other.value_;
+        value_ -= other.value_;
         return *this;
     }
     Dval& operator/=(const Dval& other) {
-        value_ -= other.value_;
+        value_ /= other.value_;
         return *this;
     }
 
     Dval operator+(double other) { return { value_ + other }; }
-    Dval operator*(double other) { return { value_ + other }; }
-    Dval operator-(double other) { return { value_ + other }; }
-    Dval operator/(double other) { return { value_ + other }; }
+    Dval operator*(double other) { return { value_ * other }; }
+    Dval operator-(double other) { return { value_ - other }; }
+    Dval operator/(double other) { return { value_ / other }; }
     Dval& operator+=(double other) {
         value_ += other;
         return *this;

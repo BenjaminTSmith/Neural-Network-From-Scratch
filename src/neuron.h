@@ -15,7 +15,7 @@ struct Neuron {
 
     Neuron() {}
 
-    Matrix<Dval> ForwardPass(const Matrix<Dval>& inputs) {
+    Matrix<Dval> ForwardProp(const Matrix<Dval>& inputs) {
         out_ = inputs * weights_ + bias_;
         return out_;
     }

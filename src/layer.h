@@ -9,6 +9,8 @@ class Layer {
     Layer(int nneurons, int nins) : neurons_(nneurons) {
         for (auto& neuron_ : neurons_) neuron_ = Neuron(nins);
     }
+
+    void ForwardProp() {}
 };
 
 #endif // !LAYER_H

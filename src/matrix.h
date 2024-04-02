@@ -16,7 +16,7 @@ struct Matrix {
           col_count_(col_count),
           elements_(row_count * col_count) {}
 
-    Matrix() {}
+    Matrix() : row_count_(0), col_count_(0) {}
 
     Matrix(const Matrix& other) = default;
 
@@ -27,7 +27,8 @@ struct Matrix {
         // 0 1 -1
         // 1 2 -3
         // 3 1 0
-        // would be ordered like this: { 0, 1, -1, 1, 2, -3, 3, 1, 0 }
+        // would be ordered in the vector 
+        // like this: { 0, 1, -1, 1, 2, -3, 3, 1, 0 }
 
         if (elements.size() != row_count_ * col_count_)
             throw std::range_error("Size of elements does not match size of matrix!");
@@ -94,7 +95,21 @@ struct Matrix {
         for (size_t i = 0; i < col_count_; i++) {
             T sum = 0;
             for (size_t j = 0; j < row_count_; j++) {
-                sum += elements_[j * row_count_ + i];
+                sum += elements_[j * col_count_ + i];
+            }
+            new_elements.push_back(sum / row_count_);
+        }
+        avg.SetElements(new_elements);
+        return avg;
+    }
+
+    Matrix RowwiseAverage() const {
+        Matrix avg(row_count_, 1);
+        std::vector<T> new_elements;
+        for (size_t i = 0; i < row_count_; i++) {
+            T sum = 0;
+            for (size_t j = 0; j < col_count_; j++) {
+                sum += elements_[i * col_count_ + j];
             }
             new_elements.push_back(sum / row_count_);
         }
