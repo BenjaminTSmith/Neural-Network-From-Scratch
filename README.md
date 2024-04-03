@@ -1,20 +1,14 @@
 # Neural Network from Scratch
 ## Build
-To build this project, create a build directory within the repo and run
+To configure the native cmake build system for this project, run
 ```bash
-cmake -S src -B build
+bash configure.sh
 ```
-Then, navigate to the build directory and run 
+After you have configured cmake, run
 ```bash
-make
+bash build.sh
 ```
 This will
-create an executable binary for your system which you can then run.
+create an executable binary for your system in the build directory,
+which you can then run.
 (Make sure you have cmake and make installed).
-
-## Dependencies
-This projects requires the Eigen library to be included. Either place
-the library in your usr/local/include or create an include directory and
-edit the CMakeLists.txt.
-
-
