@@ -128,18 +128,28 @@ struct Matrix {
         ret.SetElements(new_elements);
         return ret;
     }
+
+    Matrix Clip(const T& min, const T& max) {
+        Matrix ret(row_count_, col_count_);
+        std::vector<T> new_elements;
+        for (const auto& element_ : elements_) {
+            // TODO
+        }
+        ret.SetElements(new_elements);
+        return ret;
+    }
 };
 
 template <typename T>
 static std::ostream& operator<<(std::ostream& oss, const Matrix<T>& mat) {
     for (size_t i = 0; i < mat.row_count_ - 1; i++) {
         for (size_t j = 0; j < mat.col_count_; j++) {
-            oss << mat[i * mat.col_count_ + j] << " "; 
+            oss << mat[i * mat.col_count_ + j] << ' '; 
         }
         oss << std::endl;
     }
     for (size_t j = 0; j < mat.col_count_; j++) {
-        oss << mat[(mat.row_count_ - 1) * mat.col_count_ + j] << " "; 
+        oss << mat[(mat.row_count_ - 1) * mat.col_count_ + j] << ' '; 
     }
     return oss;
 }

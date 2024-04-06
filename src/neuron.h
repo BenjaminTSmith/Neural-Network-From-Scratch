@@ -10,18 +10,18 @@ struct Neuron {
     Matrix<Dval> out_;
     
     Neuron(int nins) 
-        : weights_(nins, 1),
+        : weights_(1, nins),
           bias_(0) {} 
 
     Neuron() {}
 
     Matrix<Dval> ForwardProp(const Matrix<Dval>& inputs) {
-        out_ = inputs * weights_ + bias_;
+        // weights_ is a row vector, inputs need to be columns
+        out_ = weights_ * inputs + bias_;
         return out_;
     }
 
-    void BackProp(const Matrix<Dval>& inputs) {
-    } 
+    void BackProp(const Matrix<Dval>& inputs) {} 
 
 };
 
