@@ -22,7 +22,7 @@ struct Neuron {
     }
 
     void BackProp(const Matrix<Dval>& inputs) {} 
-
+        
 };
 
 #endif // !NEURON_H

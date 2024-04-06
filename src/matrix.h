@@ -128,16 +128,29 @@ struct Matrix {
         ret.SetElements(new_elements);
         return ret;
     }
-
-    Matrix Clip(const T& min, const T& max) {
+    
+    Matrix Max(const T& scalar=0) {
         Matrix ret(row_count_, col_count_);
         std::vector<T> new_elements;
         for (const auto& element_ : elements_) {
-            // TODO
+            if (element_ > scalar) new_elements.push_back(element_);
+            else new_elements.push_back(scalar);
         }
         ret.SetElements(new_elements);
         return ret;
     }
+
+    Matrix Min(const T& scalar=0) {
+        Matrix ret(row_count_, col_count_);
+        std::vector<T> new_elements;
+        for (const auto& element_ : elements_) {
+            if (element_ < scalar) new_elements.push_back(element_);
+            else new_elements.push_back(scalar);
+        }
+        ret.SetElements(new_elements);
+        return ret;
+    }
+
 };
 
 template <typename T>
