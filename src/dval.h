@@ -21,7 +21,9 @@ struct Dval {
         return *this;
     };
 
-    Dval operator+(const Dval& other) const { return { value_ + other.value_ }; }
+    Dval operator+(const Dval& other) const {
+        return { value_ + other.value_, grad_ + other.grad_ }; 
+    }
     Dval operator*(const Dval& other) const { return { value_ * other.value_ }; }
     Dval operator-(const Dval& other) const { return { value_ - other.value_ }; }
     Dval operator/(const Dval& other) const { return { value_ / other.value_ }; }

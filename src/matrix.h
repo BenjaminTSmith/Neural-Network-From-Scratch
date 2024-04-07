@@ -20,7 +20,7 @@ struct Matrix {
 
     Matrix(const Matrix& other) = default;
 
-    T operator[](size_t idx) const { return elements_[idx]; }
+    T& operator[](size_t idx) { return elements_[idx]; }
 
     void SetElements(const std::vector<T>& elements) {
         // elements are in row order. i.e. a matrix that looks like:
@@ -154,7 +154,7 @@ struct Matrix {
 };
 
 template <typename T>
-static std::ostream& operator<<(std::ostream& oss, const Matrix<T>& mat) {
+static std::ostream& operator<<(std::ostream& oss, Matrix<T> mat) {
     for (size_t i = 0; i < mat.row_count_ - 1; i++) {
         for (size_t j = 0; j < mat.col_count_; j++) {
             oss << mat[i * mat.col_count_ + j] << ' '; 
