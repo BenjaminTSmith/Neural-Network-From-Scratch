@@ -1,5 +1,4 @@
 #!/bin/sh
 
 cd build
-make
-cd ..
+cmake --build .
