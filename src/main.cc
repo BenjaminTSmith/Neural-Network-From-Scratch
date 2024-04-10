@@ -1,16 +1,21 @@
-#include <iostream>
 #include "dval.h"
-#include "matrix.h"
 #include "neuron.h"
+#include "matrix.h"
+#include <iostream>
 
 int main() {
+    Neuron neuron(3);
+    Matrix<Dval> mat(3, 2);
+    mat.SetElements({2, -1,  0, 6,  1, 0});
+    neuron.ForwardProp(mat);
+    neuron.ZeroGrad();
+    neuron.out_[0].grad_ = 1;
+    neuron.out_[1].grad_ = 1;
+    neuron.BackProp(mat);
 
-    Matrix<Dval> mat1(2, 3);
-    mat1.SetElements({ -2, 1, 4, 5, -9, 0 });
-    std::cout << mat1 << std::endl << std::endl << mat1.Transpose().Max(0) << std::endl << std::endl;
-    std::cout << mat1.ColwiseAverage() << std::endl << std::endl;
-    std::cout << mat1 * -1 << std::endl;
-    mat1 = mat1 * -1;
+    std::cout << mat << std::endl;
+    for (auto& element_ : neuron.weights_.elements_)
+        std::cout << element_.grad_ << std::endl;
 
     return 0;
 }
