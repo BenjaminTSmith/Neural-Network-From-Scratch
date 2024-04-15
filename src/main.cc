@@ -1,21 +1,30 @@
-#include "dval.h"
-#include "neuron.h"
-#include "matrix.h"
 #include <iostream>
+#include "layer.h"
 
 int main() {
-    Neuron neuron(3);
-    Matrix<Dval> mat(3, 2);
-    mat.SetElements({2, -1,  0, 6,  1, 0});
-    neuron.ForwardProp(mat);
-    neuron.ZeroGrad();
-    neuron.out_[0].grad_ = 1;
-    neuron.out_[1].grad_ = 1;
-    neuron.BackProp(mat);
+    
+    Layer layer1(5, 2);
+    Layer layer2(3, 5);
 
-    std::cout << mat << std::endl;
-    for (auto& element_ : neuron.weights_.elements_)
-        std::cout << element_.grad_ << std::endl;
+    Matrix<Dval> mat(2, 1);
+    mat.SetElements({ 3, 7 });
+
+    layer1.ForwardProp(mat);
+    layer2.ForwardProp(layer1);
+    layer2.SetGrad();
+    layer2.BackProp(layer1);
+    layer1.BackProp(mat);
+
+    for (auto& neuron_ : layer2.neurons_) {
+        for (auto& element_ : neuron_.weights_.elements_) {
+            std::cout << element_.grad_ << std::endl;
+        }
+    }
+
+    std::cout << layer1 << std::endl;
+    std::cout << layer2 << std::endl;
 
     return 0;
 }
+
+

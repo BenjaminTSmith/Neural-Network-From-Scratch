@@ -21,7 +21,7 @@ template <typename T> struct Matrix {
     T& operator[](size_t idx) { return elements_[idx]; }
     const T& operator[](size_t idx) const { return elements_[idx]; }
 
-    size_t size() { return elements_.size(); }
+    size_t size() const { return elements_.size(); }
 
     void SetElements(const std::vector<T>& elements) {
         // elements are in row order. i.e. a matrix that looks like:

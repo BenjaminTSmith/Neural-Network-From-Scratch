@@ -22,6 +22,21 @@ struct Neuron {
         return out_;
     }
 
+    Matrix<Dval> ForwardProp(const std::vector<Neuron>& inputs) {
+        Matrix<Dval> input_matrix(inputs.size(), inputs[0].out_.size());
+        std::vector<Dval> input_vector;
+        for (auto& input : inputs) {
+            for (auto& element_ : input.out_.elements_) {
+                input_vector.push_back(element_);
+            }
+        }
+        input_matrix.SetElements(input_vector);
+
+        out_ = weights_ * input_matrix + bias_;
+        out_ = out_.Max(0).Transpose();
+        return out_;
+    }
+
     void BackProp(const Matrix<Dval>& inputs) {
         for (size_t i = 0; i < out_.size(); i++) {
             bias_.grad_ += out_[i].grad_;
@@ -36,7 +51,7 @@ struct Neuron {
                         (1 / static_cast<double>(out_.row_count_));
         for (auto& weight_ : weights_.elements_) {
             weight_.value_ -= weight_.grad_ * learning_rate_ *
-                              (1 / static_cast<double>(inputs.col_count_));
+                              (1 / static_cast<double>(out_.row_count_));
         }
     }
 
@@ -45,7 +60,8 @@ struct Neuron {
         for (size_t i = 0; i < out_.size(); i++) {
             bias_.grad_ += out_[i].grad_;
             for (size_t j = 0; j < input.size(); j++) {
-                weights_[j].grad_ += out_[i].grad_ ;
+                weights_[j].grad_ += out_[i].grad_ * input[j].out_[i].value_;
+                input[j].out_[i].grad_ += out_[i].grad_ * weights_[j].value_;
             }
         }
 
@@ -54,7 +70,7 @@ struct Neuron {
                         (1 / static_cast<double>(out_.row_count_));
         for (auto& weight_ : weights_.elements_) {
             weight_.value_ -= weight_.grad_ * learning_rate_ *
-                              (1 / static_cast<double>(input[0].out_.col_count_));
+                              (1 / static_cast<double>(out_.row_count_));
         }
     }
 
