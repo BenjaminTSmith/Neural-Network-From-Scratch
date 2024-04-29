@@ -73,6 +73,19 @@ template <typename T> struct Matrix {
         return ret;
     }
 
+    Matrix operator-(const Matrix& other) const {
+        if (other.row_count_ != row_count_ or other.col_count_ != col_count_)
+            throw std::range_error("Matrix sizes don't match!");
+
+        Matrix ret(row_count_, col_count_);
+        std::vector<T> new_elements;
+        for (size_t i = 0; i < elements_.size(); i++)
+            new_elements.push_back(elements_[i] - other.elements_[i]);
+
+        ret.SetElements(new_elements);
+        return ret;
+    }
+
     // coeff wise scalar operations
     Matrix operator+(const T& scalar) const {
         std::vector<T> new_elements;
@@ -120,7 +133,25 @@ template <typename T> struct Matrix {
         return avg;
     }
 
-    Matrix Transpose() {
+    Matrix Square() const {
+        Matrix ret(row_count_, col_count_);
+        std::vector<T> new_elements;
+        for (const auto& element_ : elements_)
+            new_elements.push_back(element_ * element_);
+        ret.SetElements(new_elements);
+        return ret;
+    }
+
+    T Average() {
+        T average = 0;
+        for (const auto& element_ : elements_) {
+            average += element_;
+        }
+        average /= elements_.size();
+        return average;
+    }
+
+    Matrix Transpose() const {
         Matrix ret(col_count_, row_count_);
         std::vector<T> new_elements;
         for (size_t i = 0; i < col_count_; i++) {
@@ -132,7 +163,7 @@ template <typename T> struct Matrix {
         return ret;
     }
 
-    Matrix Max(const T& scalar = 0) {
+    Matrix Max(const T& scalar = 0) const {
         Matrix ret(row_count_, col_count_);
         std::vector<T> new_elements;
         for (const auto& element_ : elements_) {
@@ -145,7 +176,7 @@ template <typename T> struct Matrix {
         return ret;
     }
 
-    Matrix Min(const T& scalar = 0) {
+    Matrix Min(const T& scalar = 0) const {
         Matrix ret(row_count_, col_count_);
         std::vector<T> new_elements;
         for (const auto& element_ : elements_) {

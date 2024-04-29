@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <random>
+#include <chrono>
 
 struct Dval {
     double value_;
@@ -69,8 +71,10 @@ struct Dval {
     bool operator>(const Dval& other) const { return value_ > other.value_; }
 
     void SetRandom() {
-        // uses C stdlib right now. will switch to C++ stl later
-        value_ = static_cast<double>(rand()) / RAND_MAX * 2.0 - 1.0;
+        std::default_random_engine generator;
+        generator.seed(time(0));
+        std::uniform_real_distribution<double> distribution(-1, 1);
+        value_ = distribution(generator);
     }
 
     explicit operator double() const { return value_; }

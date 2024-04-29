@@ -8,7 +8,6 @@ struct Neuron {
     Matrix<Dval> weights_;
     Dval bias_;
     Matrix<Dval> out_;
-    double learning_rate_ = 1;
 
     Neuron(int nins) : weights_(1, nins), bias_(0) {}
 
@@ -18,7 +17,7 @@ struct Neuron {
         // weights_ is a row vector, input needs to be a column vector or
         // a matrix with columns as inputs
         out_ = weights_ * inputs + bias_;
-        out_ = out_.Max(0).Transpose();
+        out_ = out_.Max(0).Transpose(); // ReLU and Transpose
         return out_;
     }
 
@@ -37,7 +36,7 @@ struct Neuron {
         return out_;
     }
 
-    void BackProp(const Matrix<Dval>& inputs) {
+    void BackProp(const Matrix<Dval>& inputs, double alpha) {
         for (size_t i = 0; i < out_.size(); i++) {
             bias_.grad_ += out_[i].grad_;
             for (size_t j = 0; j < inputs.row_count_; j++) {
@@ -47,16 +46,15 @@ struct Neuron {
         }
 
         // average derivatives and apply to value
-        bias_.value_ -= bias_.grad_ * learning_rate_ *
+        bias_.value_ -= bias_.grad_ * alpha *
                         (1 / static_cast<double>(out_.row_count_));
         for (auto& weight_ : weights_.elements_) {
-            weight_.value_ -= weight_.grad_ * learning_rate_ *
+            weight_.value_ -= weight_.grad_ * alpha *
                               (1 / static_cast<double>(out_.row_count_));
         }
     }
 
-    void BackProp(std::vector<Neuron>& input) {
-        // compute derivatives
+    void BackProp(std::vector<Neuron>& input, double alpha) {
         for (size_t i = 0; i < out_.size(); i++) {
             bias_.grad_ += out_[i].grad_;
             for (size_t j = 0; j < input.size(); j++) {
@@ -65,11 +63,10 @@ struct Neuron {
             }
         }
 
-        // average derivatives
-        bias_.value_ -= bias_.grad_ * learning_rate_ *
+        bias_.value_ -= bias_.grad_ * alpha *
                         (1 / static_cast<double>(out_.row_count_));
         for (auto& weight_ : weights_.elements_) {
-            weight_.value_ -= weight_.grad_ * learning_rate_ *
+            weight_.value_ -= weight_.grad_ * alpha *
                               (1 / static_cast<double>(out_.row_count_));
         }
     }
