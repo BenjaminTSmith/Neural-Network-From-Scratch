@@ -2,7 +2,7 @@
 #include "layer.h"
 
 int main() {
-    
+
     Layer input_layer(2, 2);
     Layer output_layer(3, 2);
 
