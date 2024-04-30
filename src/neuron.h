@@ -40,8 +40,10 @@ struct Neuron {
         for (size_t i = 0; i < out_.size(); i++) {
             bias_.grad_ += out_[i].grad_;
             for (size_t j = 0; j < inputs.row_count_; j++) {
-                weights_[j].grad_ += out_[i].grad_ 
-                    * inputs[j * inputs.col_count_ + i].value_; 
+                if (out_[i].value_ > 0) {
+                    weights_[j].grad_ += out_[i].grad_ 
+                        * inputs[j * inputs.col_count_ + i].value_; 
+                }
             }
         }
 
@@ -58,8 +60,10 @@ struct Neuron {
         for (size_t i = 0; i < out_.size(); i++) {
             bias_.grad_ += out_[i].grad_;
             for (size_t j = 0; j < input.size(); j++) {
-                weights_[j].grad_ += out_[i].grad_ * input[j].out_[i].value_;
-                input[j].out_[i].grad_ += out_[i].grad_ * weights_[j].value_;
+                if (out_[i].value_ > 0) {
+                    weights_[j].grad_ += out_[i].grad_ * input[j].out_[i].value_;
+                    input[j].out_[i].grad_ += out_[i].grad_ * weights_[j].value_;
+                }
             }
         }
 

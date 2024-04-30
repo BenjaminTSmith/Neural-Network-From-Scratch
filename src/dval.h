@@ -71,8 +71,7 @@ struct Dval {
     bool operator>(const Dval& other) const { return value_ > other.value_; }
 
     void SetRandom() {
-        std::default_random_engine generator;
-        generator.seed(time(0));
+        std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
         std::uniform_real_distribution<double> distribution(-1, 1);
         value_ = distribution(generator);
     }
