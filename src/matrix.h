@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include <cmath>
 
 template <typename T> struct Matrix {
     int row_count_;
@@ -187,6 +188,45 @@ template <typename T> struct Matrix {
         }
         ret.SetElements(new_elements);
         return ret;
+    }
+
+    Matrix SoftMax() const {
+        Matrix result(row_count_, col_count_);
+        std::vector<T> maxes;
+        std::vector<T> sums;
+        std::vector<T> soft_max_elements;
+
+        for (int i = 0; i < col_count_; i++) {
+            maxes.push_back(elements_[i]);
+        }
+
+        for (int i = 0; i < col_count_; i++) {
+            for (int j = 1; j < row_count_; j++) {
+                if (elements_[j * col_count_ + i] > maxes[i])
+                    maxes[i] = elements_[j * col_count_ + i];
+            }
+        }
+
+        for (int i = 0; i < col_count_; i++) {
+            sums.push_back(std::exp(elements_[i] - maxes[i]));
+        }
+
+        for (int i = 0; i < col_count_; i++) {
+            for (int j = 1; j < row_count_; j++) {
+                sums[i] += std::exp(elements_[j * col_count_ + i] - maxes[i]);
+            }
+        }
+
+
+        for (int i = 0; i < size(); i++) {
+            soft_max_elements.push_back(
+                std::exp(elements_[i] - maxes[i % col_count_]) /
+                sums[i % col_count_]
+            );
+        }
+
+        result.SetElements(soft_max_elements);
+        return result;
     }
 };
 

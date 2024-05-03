@@ -13,15 +13,15 @@ struct Neuron {
 
     Neuron() {}
 
-    Matrix<Dval> ForwardProp(const Matrix<Dval>& inputs) {
+    Matrix<Dval> ForwardPass(const Matrix<Dval>& inputs) {
         // weights_ is a row vector, input needs to be a column vector or
         // a matrix with columns as inputs
         out_ = weights_ * inputs + bias_;
-        out_ = out_.Max(0).Transpose(); // ReLU and Transpose
+        out_ = out_.Transpose(); // ReLU and Transpose
         return out_;
     }
 
-    Matrix<Dval> ForwardProp(const std::vector<Neuron>& inputs) {
+    Matrix<Dval> ForwardPass(const std::vector<Neuron>& inputs) {
         Matrix<Dval> input_matrix(inputs.size(), inputs[0].out_.size());
         std::vector<Dval> input_vector;
         for (auto& input : inputs) {
@@ -32,7 +32,7 @@ struct Neuron {
         input_matrix.SetElements(input_vector);
 
         out_ = weights_ * input_matrix + bias_;
-        out_ = out_.Max(0).Transpose();
+        out_ = out_.Transpose();
         return out_;
     }
 
@@ -73,6 +73,10 @@ struct Neuron {
             weight_.value_ -= weight_.grad_ * alpha *
                               (1 / static_cast<double>(out_.row_count_));
         }
+    }
+
+    void Activate() {
+        out_ = out_.Max(0);
     }
 
     void ZeroGrad() {

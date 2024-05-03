@@ -15,7 +15,7 @@ struct Dval {
     Dval(const Dval& other) : value_(other.value_), grad_(other.grad_) {}
 
     Dval() : grad_(0) { SetRandom(); }
-
+    
     Dval& operator=(const Dval& other) = default;
     Dval& operator=(double value) {
         value_ = value;
@@ -69,6 +69,8 @@ struct Dval {
 
     bool operator<(const Dval& other) const { return value_ < other.value_; }
     bool operator>(const Dval& other) const { return value_ > other.value_; }
+    bool operator<(double other) const { return value_ < other; }
+    bool operator>(double other) const { return value_ > other; }
 
     void SetRandom() {
         std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
@@ -76,7 +78,7 @@ struct Dval {
         value_ = distribution(generator);
     }
 
-    explicit operator double() const { return value_; }
+    operator double() const { return value_; }
 };
 
 static std::ostream& operator<<(std::ostream& oss, const Dval& dval) {
